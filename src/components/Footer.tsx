@@ -1,10 +1,11 @@
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { personal, socials } from "@/data/portfolio";
 
 const iconMap: Record<string, React.ReactNode> = {
   github: <FaGithub />,
   linkedin: <FaLinkedin />,
+  whatsapp: <FaWhatsapp />,
   email: <HiOutlineMail />,
 };
 

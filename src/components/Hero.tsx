@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiDownload, FiArrowDown } from "react-icons/fi";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { personal, socials } from "@/data/portfolio";
 import ParticleField from "./ParticleField";
@@ -11,6 +11,7 @@ import ParticleField from "./ParticleField";
 const iconMap: Record<string, React.ReactNode> = {
   github: <FaGithub />,
   linkedin: <FaLinkedin />,
+  whatsapp: <FaWhatsapp />,
   email: <HiOutlineMail />,
 };
 

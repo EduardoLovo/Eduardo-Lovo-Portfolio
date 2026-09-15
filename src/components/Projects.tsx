@@ -100,6 +100,7 @@ function FeaturedCard({ p }: { p: Project }) {
 
 /** Card padrão (grid). */
 function NormalCard({ p, i }: { p: Project; i: number }) {
+  const [imgOk, setImgOk] = useState(true);
   return (
     <motion.article
       initial={{ opacity: 0, y: 30 }}
@@ -107,11 +108,25 @@ function NormalCard({ p, i }: { p: Project; i: number }) {
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: i * 0.1 }}
       whileHover={{ y: -6 }}
-      className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition-colors hover:border-accent"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-accent"
     >
-      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-accent to-accent-2 font-mono text-lg font-bold text-white">
-        {p.title.charAt(0)}
-      </div>
+      {p.image && imgOk ? (
+        <div className="h-40 overflow-hidden border-b border-border bg-gradient-to-tr from-accent/20 to-accent-2/20">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={p.image}
+            alt={p.title}
+            onError={() => setImgOk(false)}
+            className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
+      ) : null}
+      <div className="flex flex-1 flex-col p-6">
+        {!(p.image && imgOk) && (
+          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-accent to-accent-2 font-mono text-lg font-bold text-white">
+            {p.title.charAt(0)}
+          </div>
+        )}
       <h3 className="text-xl font-semibold">{p.title}</h3>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
         {p.description}
@@ -119,13 +134,14 @@ function NormalCard({ p, i }: { p: Project; i: number }) {
       <div className="mt-4">
         <TechTags tags={p.tags} />
       </div>
-      {p.links && (
-        <div className="mt-5 flex flex-wrap gap-3">
-          {p.links.map((l) => (
-            <LinkButton key={l.url} link={l} />
-          ))}
-        </div>
-      )}
+        {p.links && (
+          <div className="mt-5 flex flex-wrap gap-3">
+            {p.links.map((l) => (
+              <LinkButton key={l.url} link={l} />
+            ))}
+          </div>
+        )}
+      </div>
     </motion.article>
   );
 }

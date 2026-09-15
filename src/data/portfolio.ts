@@ -12,6 +12,9 @@ export const personal = {
     "Transformo ideias em aplicações web rápidas, acessíveis e bonitas — do banco de dados à interface.",
   location: "Jandaia do Sul, PR",
   phone: "(43) 99956-7684",
+  // Link do WhatsApp (formato: 55 + DDD + número), com mensagem pronta
+  whatsapp:
+    "https://wa.me/5543999567684?text=Ol%C3%A1%20Eduardo%2C%20vi%20o%20seu%20portf%C3%B3lio!",
   email: "eduardo.llovo@gmail.com",
   // Caminho do seu currículo em PDF (coloque o arquivo em /public)
   cvUrl: "/curriculo-eduardo.pdf",
@@ -24,6 +27,7 @@ export const personal = {
 export const socials = [
   { name: "GitHub", url: "https://github.com/EduardoLovo", icon: "github" },
   { name: "LinkedIn", url: "https://www.linkedin.com/in/eduardo-felipe-lovo-475019214/", icon: "linkedin" },
+  { name: "WhatsApp", url: "https://wa.me/5543999567684?text=Ol%C3%A1%20Eduardo%2C%20vi%20o%20seu%20portf%C3%B3lio!", icon: "whatsapp" },
   { name: "Email", url: "mailto:eduardo.llovo@gmail.com", icon: "email" },
 ];
 
@@ -84,10 +88,10 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    title: "Plataforma E-commerce Full-Stack",
-    subtitle: "Duas lojas em produção — Inphantil e Conceitual Pet",
+    title: "Plataforma E-commerce — Inphantil",
+    subtitle: "Loja de móveis e produtos infantis, em produção",
     description:
-      "Plataforma de e-commerce completa que desenvolvi e mantenho no ar, servindo duas lojas do Grupo Inphantil. Front-end em React + Vite consumindo uma API NestJS, com PostgreSQL via Prisma e imagens no AWS S3.",
+      "Plataforma de e-commerce completa que desenvolvi e mantenho no ar para a Inphantil Móveis. Front-end em React + Vite consumindo uma API NestJS, com PostgreSQL via Prisma e imagens no AWS S3.",
     highlights: [
       "Pagamentos reais: Pix e cartão de crédito com parcelamento e juros via gateway e.Rede (com migração para OAuth 2.0).",
       "Cálculo de frete integrado aos Correios, com regras próprias de entrega.",
@@ -109,9 +113,24 @@ export const projects: Project[] = [
     ],
     featured: true,
     image: "/projeto-inphantil.png",
+    links: [{ label: "Ver site", url: "https://www.inphantil.com.br/" }],
+  },
+  {
+    title: "E-commerce — Conceitual Pet",
+    description:
+      "Loja virtual completa de produtos para pets, em produção. Mesma base full-stack (React + NestJS + PostgreSQL) com pagamentos, cálculo de frete dos Correios e painel administrativo.",
+    tags: ["React", "TypeScript", "NestJS", "Prisma", "PostgreSQL", "Tailwind"],
+    image: "/projeto-conceitualpet.png",
+    links: [{ label: "Ver site", url: "https://www.conceitualpet.com.br/" }],
+  },
+  {
+    title: "Ana Cordeiro — Arquitetura",
+    description:
+      "Site institucional para uma arquiteta, com painel administrativo próprio (CMS): a cliente edita todo o conteúdo — projetos, textos e imagens — sem tocar no código. Design minimalista P&B, formulário de contato e SEO.",
+    tags: ["Next.js", "TypeScript", "Sanity CMS", "Tailwind", "Vercel"],
+    image: "/projeto-anacordeiro.png",
     links: [
-      { label: "Inphantil", url: "https://www.inphantil.com.br/" },
-      { label: "Conceitual Pet", url: "https://www.conceitualpet.com.br/" },
+      { label: "Código", url: "https://github.com/EduardoLovo/Ana-Cordeiro" },
     ],
   },
   {
