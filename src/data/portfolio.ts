@@ -130,6 +130,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "TypeScript", "Sanity CMS", "Tailwind", "Vercel"],
     image: "/projeto-anacordeiro.png",
     links: [
+      { label: "Ver site", url: "https://www.anacordeiroarq.com.br/" },
       { label: "Código", url: "https://github.com/EduardoLovo/Ana-Cordeiro" },
     ],
   },
