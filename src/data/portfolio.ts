@@ -135,6 +135,28 @@ export const projects: Project[] = [
     ],
   },
   {
+    title: "Inphantil Cloud — Painel Interno",
+    description:
+      "Sistema interno da Inphantil: mostruário público e área fechada para a equipe, com calculadoras de venda, orçamentos, cotação de frete e catálogo. Controle de acesso por papéis (DEV, ADMIN, vendedor) validado no servidor e upload de imagens para o Cloudflare R2 com limpeza automática de arquivos órfãos.",
+    tags: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Auth.js", "Tailwind"],
+    image: "/projeto-inphantil-adm.png",
+    links: [
+      { label: "Ver site", url: "https://inphantil-moveis.vercel.app" },
+      { label: "Código", url: "https://github.com/EduardoLovo/Inphantil-Moveis-Adm" },
+    ],
+  },
+  {
+    title: "Pokédex Dive",
+    description:
+      "Pokédex dos 151 Pokémon de Kanto consumindo a PokéAPI, com navegação em profundidade: ao rolar, os cards \"mergulham\" em direção à câmera. Busca por nome ou número, navegação por teclado, tema claro/escuro e suporte a movimento reduzido.",
+    tags: ["React", "TypeScript", "Vite", "GSAP", "PokéAPI"],
+    image: "/projeto-pokemon.png",
+    links: [
+      { label: "Ver site", url: "https://api-pokemon-ten.vercel.app" },
+      { label: "Código", url: "https://github.com/EduardoLovo/Api-Pokemon" },
+    ],
+  },
+  {
     title: "Mais projetos no GitHub",
     description:
       "Estudos, projetos das formações e experimentos com novas tecnologias ficam no meu GitHub.",
