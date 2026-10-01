@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cafe game — arte licenciada (LimeZu), não pode ser redistribuída
+/assets-source/
+/public/game-assets/
