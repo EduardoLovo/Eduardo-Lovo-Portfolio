@@ -1,31 +1,50 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EventBus } from "@/game/EventBus";
 import { NPCS, type NpcId } from "@/game/npcs";
-import { DEFAULT_PLAYER_NAME } from "@/game/constants";
-import { advance, choose, currentNode, renderText, startDialog, type DialogState } from "@/game/systems/DialogEngine";
-import type { ChoiceKind, Dialogs } from "@/game/types";
+import {
+  advance,
+  choose,
+  currentNode,
+  pickDialog,
+  renderText,
+  startDialog,
+  type DialogState,
+} from "@/game/systems/DialogEngine";
+import { gameStore, hasFlag } from "@/game/systems/GameStore";
+import type { ChoiceKind, DialogNode, Dialogs } from "@/game/types";
 import dialogsJson from "@/data/cafe/dialogs.json";
+import { useGameState } from "../useGameState";
+import { PIXEL_FONT, RichText } from "./pixel";
 
 const dialogs = dialogsJson as Dialogs;
 const TYPING_MS = 22;
-const vars = { playerName: DEFAULT_PLAYER_NAME };
 
 // typing: texto aparecendo · choosing: opções na tela · feedback: dica após a escolha · continue: nó sem opções
 type Phase = "typing" | "choosing" | "feedback" | "continue";
 type Feedback = { kind: Exclude<ChoiceKind, "natural">; text: string; after: DialogState };
+type Conversation = { npcId: NpcId; dialogId: string };
+
+const learn = (node: DialogNode) => {
+  if (node.learn?.length) gameStore.dispatch({ type: "learn", expressions: node.learn });
+};
 
 export default function DialogBox() {
-  const [npcId, setNpcId] = useState<NpcId | null>(null);
+  const { playerName } = useGameState();
+  const [conversation, setConversation] = useState<Conversation | null>(null);
   const [state, setState] = useState<DialogState | null>(null);
   const [typed, setTyped] = useState(0);
   const [selected, setSelected] = useState(0);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [showTranslation, setShowTranslation] = useState(false);
+  // Perguntas em que a tradução já foi contada (conta uma vez por fala)
+  const translated = useRef(new Set<string>());
 
-  const dialog = npcId ? dialogs[npcId] : null;
+  const vars = useMemo(() => ({ playerName }), [playerName]);
+  const dialog = conversation ? dialogs[conversation.dialogId] : null;
   const node = dialog && state ? currentNode(dialog, state) : null;
+  const nodeKey = conversation && state ? `${conversation.dialogId}.${state.nodeId}` : "";
   const text = node ? renderText(node.text, vars) : "";
   const phase: Phase = feedback
     ? "feedback"
@@ -37,8 +56,8 @@ export default function DialogBox() {
 
   // Opções embaralhadas (a natural nem sempre é a primeira), mas estáveis enquanto o nó está na tela
   const options = useMemo(
-    () => (node?.choices ? shuffle(node.choices.map((choice, index) => ({ choice, index })), `${npcId}.${state?.nodeId}`) : []),
-    [node, npcId, state?.nodeId],
+    () => (node?.choices ? shuffle(node.choices.map((choice, index) => ({ choice, index })), nodeKey) : []),
+    [node, nodeKey],
   );
 
   const goTo = useCallback((next: DialogState) => {
@@ -50,23 +69,25 @@ export default function DialogBox() {
   }, []);
 
   const close = useCallback(() => {
-    setNpcId(null);
+    setConversation(null);
     setState(null);
     window.speechSynthesis?.cancel();
     EventBus.emit("dialog:end");
+    // A despedida da Emma liga "finished": hora da tela de resultado
+    if (hasFlag(gameStore.get(), "finished")) gameStore.dispatch({ type: "finish" });
   }, []);
 
-  // Phaser avisa que o jogador apertou E perto de um NPC
+  // Phaser avisa que o jogador apertou E perto de um NPC: o diálogo depende do andamento do jogo
   useEffect(
     () =>
-      EventBus.on("dialog:start", (id) => {
-        const npcDialog = dialogs[id];
-        if (!npcDialog) {
+      EventBus.on("dialog:start", (npcId) => {
+        const dialogId = pickDialog(dialogs, npcId, gameStore.get().flags);
+        if (!dialogId) {
           EventBus.emit("dialog:end");
           return;
         }
-        setNpcId(id);
-        goTo(startDialog(npcDialog));
+        setConversation({ npcId, dialogId });
+        goTo(startDialog(dialogs[dialogId]));
       }),
     [goTo],
   );
@@ -81,19 +102,25 @@ export default function DialogBox() {
 
   const pick = useCallback(
     (optionIndex: number) => {
-      if (!dialog || !state) return;
+      if (!dialog || !state || !node) return;
       const option = options[optionIndex];
       if (!option) return;
-      const result = choose(dialog, state, option.index);
-      // TODO etapa 6: aplicar result.choice.effects, pontos e glossário no GameState
-      if (result.choice.kind === "natural") {
-        if (result.state.ended) close();
-        else goTo(result.state);
+      const { state: next, choice } = choose(dialog, state, option.index);
+
+      gameStore.dispatch({ type: "answer", question: nodeKey, kind: choice.kind });
+      if (choice.kind !== "wrong") {
+        if (choice.effects) gameStore.dispatch({ type: "effects", effects: choice.effects });
+        learn(node);
+      }
+
+      if (choice.kind === "natural") {
+        if (next.ended) close();
+        else goTo(next);
       } else {
-        setFeedback({ kind: result.choice.kind, text: result.choice.feedback ?? "", after: result.state });
+        setFeedback({ kind: choice.kind, text: choice.feedback ?? "", after: next });
       }
     },
-    [dialog, state, options, close, goTo],
+    [dialog, state, node, nodeKey, options, close, goTo],
   );
 
   // Botão principal: pula a digitação, confirma a opção, sai da dica ou continua
@@ -108,22 +135,31 @@ export default function DialogBox() {
       else if (feedback.after.ended) close();
       else goTo(feedback.after);
     } else if (phase === "continue") {
+      learn(node);
       const next = advance(dialog, state);
       if (next.ended) close();
       else goTo(next);
     }
   }, [dialog, state, node, phase, text, selected, feedback, pick, close, goTo]);
 
+  const toggleTranslation = useCallback(() => {
+    if (!showTranslation && !translated.current.has(nodeKey)) {
+      translated.current.add(nodeKey);
+      gameStore.dispatch({ type: "translationUsed" });
+    }
+    setShowTranslation(!showTranslation);
+  }, [showTranslation, nodeKey]);
+
   // Teclado: E/Enter/Espaço confirmam, setas ou W/S escolhem, 1-3 escolhem direto, T traduz, Esc fecha
   useEffect(() => {
-    if (!npcId) return;
+    if (!conversation) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.repeat) return;
       const key = event.key.toLowerCase();
       const handled = () => event.preventDefault();
 
       if (key === "escape") return handled(), close();
-      if (key === "t") return handled(), setShowTranslation((value) => !value);
+      if (key === "t") return handled(), toggleTranslation();
       if (["e", "enter", " "].includes(key)) return handled(), confirm();
       if (phase !== "choosing") return;
       if (key === "arrowdown" || key === "s") return handled(), setSelected((i) => (i + 1) % options.length);
@@ -133,15 +169,17 @@ export default function DialogBox() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [npcId, phase, options.length, confirm, pick, close]);
+  }, [conversation, phase, options.length, confirm, pick, close, toggleTranslation]);
 
-  if (!npcId || !node) return null;
+  if (!conversation || !node) return null;
+  const npcName = NPCS[conversation.npcId].name;
 
   const speak = () => {
     const synth = window.speechSynthesis;
     if (!synth) return;
     synth.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+    // Narrações entre parênteses, como "(Mr. Brown is reading...)", não são faladas
+    const utterance = new SpeechSynthesisUtterance(text.replace(/\(.*?\)/g, "").trim() || text);
     utterance.lang = "en-US";
     utterance.rate = 0.9;
     synth.speak(utterance);
@@ -150,18 +188,18 @@ export default function DialogBox() {
   return (
     <div
       role="dialog"
-      aria-label={`Conversa com ${NPCS[npcId].name}`}
-      className="absolute inset-x-2 bottom-2 flex max-h-[85%] flex-col gap-2 overflow-y-auto rounded-lg border-4 border-[#3b2a33] bg-[#f3eee6] p-3 text-[#1b1420] shadow-xl sm:inset-x-3 sm:bottom-3 sm:p-4"
-      style={{ fontFamily: "var(--font-pixel), monospace" }}
+      aria-label={`Conversa com ${npcName}`}
+      className="absolute inset-x-2 bottom-2 z-20 flex max-h-[85%] flex-col gap-2 overflow-y-auto rounded-lg border-4 border-[#3b2a33] bg-[#f3eee6] p-3 text-[#1b1420] shadow-xl sm:inset-x-3 sm:bottom-3 sm:p-4"
+      style={PIXEL_FONT}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="rounded bg-[#3b2a33] px-2 py-0.5 text-sm text-[#f3eee6]">{NPCS[npcId].name}</span>
+        <span className="rounded bg-[#3b2a33] px-2 py-0.5 text-sm text-[#f3eee6]">{npcName}</span>
         <div className="flex gap-1">
           <IconButton label="Ouvir a fala (inglês)" onClick={speak}>
             🔊
           </IconButton>
           {/* Texto em vez de 🇧🇷: o Windows não desenha emojis de bandeira */}
-          <IconButton label="Mostrar tradução (T)" active={showTranslation} onClick={() => setShowTranslation((v) => !v)}>
+          <IconButton label="Mostrar tradução (T)" active={showTranslation} onClick={toggleTranslation}>
             PT
           </IconButton>
           <IconButton label="Fechar (Esc)" onClick={close}>
@@ -174,8 +212,10 @@ export default function DialogBox() {
         {text.slice(0, typed)}
         {phase === "typing" && <span className="animate-pulse">▌</span>}
       </p>
-      {showTranslation && (
-        <p className="text-sm italic text-[#6b5560]">{renderText(node.translation, vars)}</p>
+      {showTranslation && <p className="text-sm italic text-[#6b5560]">{renderText(node.translation, vars)}</p>}
+
+      {node.prompt && (phase === "choosing" || phase === "feedback") && (
+        <p className="text-sm font-bold text-[#6b5560]">👉 {node.prompt}</p>
       )}
 
       {phase === "choosing" && (
@@ -246,13 +286,6 @@ function IconButton({
     >
       {children}
     </button>
-  );
-}
-
-// Suporta **negrito** nas dicas do dialogs.json
-function RichText({ text }: { text: string }) {
-  return text.split(/(\*\*.+?\*\*)/g).map((part, i) =>
-    part.startsWith("**") ? <strong key={i}>{part.slice(2, -2)}</strong> : <span key={i}>{part}</span>,
   );
 }
 

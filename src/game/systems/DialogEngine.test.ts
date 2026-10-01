@@ -1,9 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { advance, choose, currentNode, renderText, startDialog, validateDialogs } from "./DialogEngine";
+import { advance, choose, currentNode, pickDialog, renderText, startDialog, validateDialogs } from "./DialogEngine";
 import type { Dialog, Dialogs } from "../types";
 import dialogsJson from "../../data/cafe/dialogs.json";
+import { NPCS } from "../npcs";
+
+const npcIds = Object.keys(NPCS);
+const dialogs = dialogsJson as Dialogs;
 
 const dialog: Dialog = {
+  npc: "emma",
   start: "greet",
   nodes: {
     greet: {
@@ -48,6 +53,7 @@ describe("DialogEngine", () => {
 
   it("opção natural sem next encerra o diálogo", () => {
     const single: Dialog = {
+      npc: "emma",
       start: "a",
       nodes: { a: { text: "Bye!", translation: "Tchau!", choices: [{ text: "Bye!", kind: "natural" }] } },
     };
@@ -65,6 +71,7 @@ describe("DialogEngine", () => {
   it("aponta problemas no conteúdo", () => {
     const broken: Dialogs = {
       x: {
+        npc: "emma",
         start: "missing",
         nodes: {
           a: {
@@ -86,13 +93,44 @@ describe("DialogEngine", () => {
   });
 });
 
+describe("pickDialog", () => {
+  const routed: Dialogs = {
+    late: { npc: "leo", requires: ["paid"], start: "a", nodes: { a: { text: "x", translation: "x" } } },
+    blocked: { npc: "leo", unless: ["angry"], start: "a", nodes: { a: { text: "x", translation: "x" } } },
+    fallback: { npc: "leo", start: "a", nodes: { a: { text: "x", translation: "x" } } },
+  };
+
+  it("escolhe o primeiro diálogo cujas condições batem", () => {
+    expect(pickDialog(routed, "leo", { paid: true })).toBe("late");
+    expect(pickDialog(routed, "leo", {})).toBe("blocked");
+    expect(pickDialog(routed, "leo", { angry: true })).toBe("fallback");
+    expect(pickDialog(routed, "mia", {})).toBeNull();
+  });
+
+  it("acusa NPC sem fallback e diálogo inalcançável", () => {
+    const errors = validateDialogs({ fallback: routed.fallback, late: routed.late }, ["leo", "mia"]);
+    expect(errors).toContain("mia: falta um diálogo sem condições (fallback)");
+    expect(errors).toContain("late: nunca é escolhido (vem depois do fallback)");
+  });
+});
+
 describe("dialogs.json", () => {
-  it("não tem nós quebrados, traduções ou dicas faltando", () => {
-    expect(validateDialogs(dialogsJson as Dialogs)).toEqual([]);
+  it("não tem nós quebrados, traduções, dicas ou fallbacks faltando", () => {
+    expect(validateDialogs(dialogs, npcIds)).toEqual([]);
+  });
+
+  it("segue o roteiro conforme o andamento do jogo", () => {
+    const at = (...flags: string[]) => Object.fromEntries(flags.map((flag) => [flag, true as const]));
+    expect(pickDialog(dialogs, "mia", at())).toBe("mia_wait");
+    expect(pickDialog(dialogs, "mia", at("hasOrdered"))).toBe("mia");
+    expect(pickDialog(dialogs, "leo", at("hasOrdered"))).toBe("leo_after_order");
+    expect(pickDialog(dialogs, "leo", at("hasOrdered", "hasPaid"))).toBe("leo_waiting");
+    expect(pickDialog(dialogs, "leo", at("hasOrdered", "hasPaid", "orderReady"))).toBe("leo_pickup");
+    expect(pickDialog(dialogs, "emma", at("metEmma", "gotOrder"))).toBe("emma_goodbye");
   });
 
   it("todo nó com opções tem uma resposta natural", () => {
-    for (const [dialogId, d] of Object.entries(dialogsJson as Dialogs)) {
+    for (const [dialogId, d] of Object.entries(dialogs)) {
       for (const [nodeId, node] of Object.entries(d.nodes)) {
         if (node.choices) expect(node.choices.some((c) => c.kind === "natural"), `${dialogId}.${nodeId}`).toBe(true);
       }

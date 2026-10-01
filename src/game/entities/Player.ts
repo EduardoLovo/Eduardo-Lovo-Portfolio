@@ -6,9 +6,6 @@ const SPEED = 120;
 type Keys = Record<Direction, Phaser.Input.Keyboard.Key[]>;
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  // Parado durante diálogos
-  frozen = false;
-
   private keys: Keys;
   private facing: Direction = "up";
 
@@ -36,8 +33,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.play(`${this.texture.key}-idle-${this.facing}`);
   }
 
-  update() {
-    const isDown = (direction: Direction) => !this.frozen && this.keys[direction].some((key) => key.isDown);
+  /** `canMove` é falso durante diálogos e nas telas de introdução e resultado */
+  update(canMove: boolean) {
+    const isDown = (direction: Direction) => canMove && this.keys[direction].some((key) => key.isDown);
     const dx = Number(isDown("right")) - Number(isDown("left"));
     const dy = Number(isDown("down")) - Number(isDown("up"));
 

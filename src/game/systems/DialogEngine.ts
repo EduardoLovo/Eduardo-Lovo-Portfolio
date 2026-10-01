@@ -7,6 +7,18 @@ export interface DialogState {
   ended: boolean;
 }
 
+/**
+ * Escolhe o diálogo do NPC conforme o andamento do jogo: vale o primeiro (na ordem do JSON)
+ * cujas flags `requires` estão todas ligadas e nenhuma `unless` está ligada.
+ */
+export function pickDialog(dialogs: Dialogs, npc: string, flags: Record<string, true>): string | null {
+  const matches = ([, dialog]: [string, Dialog]) =>
+    dialog.npc === npc &&
+    (dialog.requires ?? []).every((flag) => flags[flag]) &&
+    !(dialog.unless ?? []).some((flag) => flags[flag]);
+  return Object.entries(dialogs).find(matches)?.[0] ?? null;
+}
+
 export function startDialog(dialog: Dialog): DialogState {
   return { nodeId: dialog.start, ended: false };
 }
@@ -40,9 +52,19 @@ export function renderText(text: string, vars: Record<string, string>) {
 }
 
 /** Confere se o conteúdo é consistente. Devolve a lista de problemas (vazia = tudo certo). */
-export function validateDialogs(dialogs: Dialogs): string[] {
+export function validateDialogs(dialogs: Dialogs, npcs: readonly string[] = []): string[] {
   const errors: string[] = [];
+  // Todo NPC precisa de um diálogo sem condições, para nunca ficar sem resposta
+  for (const npc of npcs) {
+    const fallback = Object.values(dialogs).some((d) => d.npc === npc && !d.requires?.length && !d.unless?.length);
+    if (!fallback) errors.push(`${npc}: falta um diálogo sem condições (fallback)`);
+  }
+  const npcsWithFallback = new Set<string>();
   for (const [dialogId, dialog] of Object.entries(dialogs)) {
+    if (npcs.length && !npcs.includes(dialog.npc)) errors.push(`${dialogId}: NPC "${dialog.npc}" não existe`);
+    // Depois do diálogo sem condições de um NPC, os seguintes dele nunca seriam escolhidos
+    if (npcsWithFallback.has(dialog.npc)) errors.push(`${dialogId}: nunca é escolhido (vem depois do fallback)`);
+    if (!dialog.requires?.length && !dialog.unless?.length) npcsWithFallback.add(dialog.npc);
     const where = (nodeId: string) => `${dialogId}.${nodeId}`;
     if (!dialog.nodes[dialog.start]) errors.push(`${dialogId}: nó inicial "${dialog.start}" não existe`);
 

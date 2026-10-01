@@ -1,5 +1,43 @@
 {
+  "emma_goodbye": {
+    "npc": "emma",
+    "requires": ["gotOrder"],
+    "start": "bye",
+    "nodes": {
+      "bye": {
+        "text": "Have a nice day!",
+        "translation": "Tenha um ótimo dia!",
+        "learn": ["Have a nice day!", "You too!"],
+        "choices": [
+          {
+            "text": "Thanks, you too!",
+            "kind": "natural",
+            "effects": [{ "type": "setFlag", "flag": "finished" }]
+          },
+          {
+            "text": "Thanks, me too!",
+            "kind": "wrong",
+            "feedback": "Erro clássico! Para retribuir, o certo é \"**you** too\"."
+          }
+        ]
+      }
+    }
+  },
+
+  "emma_again": {
+    "npc": "emma",
+    "requires": ["metEmma"],
+    "start": "again",
+    "nodes": {
+      "again": {
+        "text": "Leo is at the counter, just over there. Enjoy!",
+        "translation": "O Leo está no balcão, logo ali. Aproveite!"
+      }
+    }
+  },
+
   "emma": {
+    "npc": "emma",
     "start": "greet",
     "nodes": {
       "greet": {
@@ -45,11 +83,16 @@
         "translation": "Que ótimo! Você pode pedir no balcão. O Leo vai te atender. Aproveite!",
         "learn": ["counter"],
         "choices": [
-          { "text": "Thank you so much!", "kind": "natural" },
+          {
+            "text": "Thank you so much!",
+            "kind": "natural",
+            "effects": [{ "type": "setFlag", "flag": "metEmma" }]
+          },
           {
             "text": "Okay.",
             "kind": "ok",
-            "feedback": "Funciona, mas agradecer soa mais simpático: \"Thank you so much!\"."
+            "feedback": "Funciona, mas agradecer soa mais simpático: \"Thank you so much!\".",
+            "effects": [{ "type": "setFlag", "flag": "metEmma" }]
           },
           {
             "text": "Of nothing!",
@@ -61,7 +104,95 @@
     }
   },
 
+  "leo_done": {
+    "npc": "leo",
+    "requires": ["gotOrder"],
+    "start": "enjoy",
+    "nodes": {
+      "enjoy": {
+        "text": "Enjoy your coffee, {playerName}! Come back soon!",
+        "translation": "Aproveite seu café, {playerName}! Volte sempre!"
+      }
+    }
+  },
+
+  "leo_pickup": {
+    "npc": "leo",
+    "requires": ["orderReady"],
+    "start": "call",
+    "nodes": {
+      "call": {
+        "text": "Medium cappuccino for {playerName}!",
+        "translation": "Cappuccino médio para {playerName}!",
+        "prompt": "Confira o pedido: é isso mesmo que você pediu?",
+        "learn": ["Excuse me", "I think I ordered..."],
+        "choices": [
+          { "text": "Excuse me, I think I ordered a latte.", "kind": "natural", "next": "sorry" },
+          {
+            "text": "This is wrong.",
+            "kind": "ok",
+            "next": "sorry",
+            "feedback": "Soa como reclamação. \"Excuse me, I think...\" é bem mais educado."
+          },
+          {
+            "text": "Thanks!",
+            "kind": "wrong",
+            "feedback": "Opa! Confira: você pediu um **latte**, não um cappuccino."
+          }
+        ]
+      },
+      "sorry": {
+        "text": "Oh, I'm so sorry! My mistake. Here's your medium latte and your blueberry muffin.",
+        "translation": "Ah, me desculpe! Erro meu. Aqui está seu latte médio e seu muffin de blueberry.",
+        "learn": ["My mistake", "No worries!"],
+        "choices": [
+          {
+            "text": "No worries! Thank you.",
+            "kind": "natural",
+            "effects": [{ "type": "setFlag", "flag": "gotOrder" }]
+          },
+          {
+            "text": "Okay.",
+            "kind": "ok",
+            "feedback": "Ele pediu desculpas: \"No worries!\" mostra que está tudo bem.",
+            "effects": [{ "type": "setFlag", "flag": "gotOrder" }]
+          },
+          {
+            "text": "No problem, is nothing.",
+            "kind": "wrong",
+            "feedback": "\"No worries!\" ou \"No problem!\" já bastam — \"is nothing\" não existe em inglês."
+          }
+        ]
+      }
+    }
+  },
+
+  "leo_waiting": {
+    "npc": "leo",
+    "requires": ["hasPaid"],
+    "start": "wait",
+    "nodes": {
+      "wait": {
+        "text": "Your order is almost ready. I'll call your name!",
+        "translation": "Seu pedido está quase pronto. Eu chamo seu nome!"
+      }
+    }
+  },
+
+  "leo_after_order": {
+    "npc": "leo",
+    "requires": ["hasOrdered"],
+    "start": "pay",
+    "nodes": {
+      "pay": {
+        "text": "Mia will take your payment at the register.",
+        "translation": "A Mia vai receber seu pagamento no caixa."
+      }
+    }
+  },
+
   "leo": {
+    "npc": "leo",
     "start": "greet",
     "nodes": {
       "greet": {
@@ -197,7 +328,110 @@
     }
   },
 
+  "mia_done": {
+    "npc": "mia",
+    "requires": ["hasPaid"],
+    "start": "thanks",
+    "nodes": {
+      "thanks": {
+        "text": "Thanks again! Leo will call your name when it's ready.",
+        "translation": "Obrigada de novo! O Leo vai chamar seu nome quando estiver pronto."
+      }
+    }
+  },
+
   "mia": {
+    "npc": "mia",
+    "requires": ["hasOrdered"],
+    "start": "total",
+    "nodes": {
+      "total": {
+        "text": "Hi! So, a medium latte to go and a blueberry muffin. That'll be six seventy-five.",
+        "translation": "Oi! Então, um latte médio para viagem e um muffin de blueberry. Fica seis e setenta e cinco.",
+        "prompt": "Quanto ela disse?",
+        "learn": ["That'll be..."],
+        "choices": [
+          { "text": "$6.75", "kind": "natural", "next": "cash_card" },
+          {
+            "text": "$7.65",
+            "kind": "wrong",
+            "feedback": "Ela disse \"**six** seventy-five\": 6 dólares e 75 centavos. Clique em 🔊 para ouvir de novo."
+          },
+          {
+            "text": "$6.57",
+            "kind": "wrong",
+            "feedback": "Preços em inglês costumam ser falados em dois blocos: \"six\" + \"seventy-five\" = $6.75."
+          }
+        ]
+      },
+      "cash_card": {
+        "text": "Will that be cash or card?",
+        "translation": "Vai ser em dinheiro ou cartão?",
+        "learn": ["cash / card"],
+        "choices": [
+          {
+            "text": "Cash, please.",
+            "kind": "natural",
+            "next": "change",
+            "effects": [{ "type": "pay" }]
+          },
+          {
+            "text": "Money.",
+            "kind": "ok",
+            "next": "change",
+            "feedback": "Para dinheiro em espécie, usa-se \"cash\".",
+            "effects": [{ "type": "pay" }]
+          },
+          {
+            "text": "Yes.",
+            "kind": "wrong",
+            "feedback": "Ela deu duas opções — escolha uma!"
+          }
+        ]
+      },
+      "change": {
+        "text": "Out of ten... here's your change.",
+        "translation": "De dez... aqui está seu troco.",
+        "prompt": "Você pagou com $10.00. Quanto de troco deve receber?",
+        "learn": ["change"],
+        "choices": [
+          { "text": "$3.25", "kind": "natural", "next": "receipt" },
+          {
+            "text": "$4.25",
+            "kind": "wrong",
+            "feedback": "Confira a conta: 10.00 − 6.75."
+          },
+          {
+            "text": "$3.75",
+            "kind": "wrong",
+            "feedback": "Quase! Confira a conta: 10.00 − 6.75."
+          }
+        ]
+      },
+      "receipt": {
+        "text": "Would you like the receipt?",
+        "translation": "Você quer a nota fiscal?",
+        "learn": ["receipt"],
+        "choices": [
+          { "text": "No, thanks. I'm good.", "kind": "natural", "next": "seat" },
+          { "text": "Yes, please.", "kind": "natural", "next": "seat" },
+          {
+            "text": "I don't like.",
+            "kind": "wrong",
+            "feedback": "\"Would you like...?\" é uma oferta — responda \"Yes, please\" ou \"No, thanks\"."
+          }
+        ]
+      },
+      "seat": {
+        "text": "Your order will be ready in a few minutes. Feel free to have a seat!",
+        "translation": "Seu pedido fica pronto em alguns minutos. Fique à vontade para se sentar!",
+        "learn": ["have a seat"]
+      }
+    }
+  },
+
+  "mia_wait": {
+    "npc": "mia",
     "start": "wait",
     "nodes": {
       "wait": {
@@ -207,12 +441,26 @@
     }
   },
 
+  "mr_brown_again": {
+    "npc": "mr_brown",
+    "requires": ["talkedToCustomer"],
+    "start": "again",
+    "nodes": {
+      "again": {
+        "text": "Good to see you again! Enjoy your day.",
+        "translation": "Bom te ver de novo! Aproveite o dia."
+      }
+    }
+  },
+
   "mr_brown": {
+    "npc": "mr_brown",
     "start": "seat",
     "nodes": {
       "seat": {
         "text": "(Mr. Brown is reading the newspaper.)",
         "translation": "(O Mr. Brown está lendo o jornal.)",
+        "prompt": "Puxe conversa:",
         "learn": ["Is this seat taken?"],
         "choices": [
           { "text": "Excuse me, is this seat taken?", "kind": "natural", "next": "where_from" },
@@ -291,7 +539,11 @@
         "translation": "Bom, foi um prazer conversar com você. Aproveite seu café!",
         "learn": ["Nice talking to you"],
         "choices": [
-          { "text": "Nice talking to you too!", "kind": "natural" },
+          {
+            "text": "Nice talking to you too!",
+            "kind": "natural",
+            "effects": [{ "type": "setFlag", "flag": "talkedToCustomer" }]
+          },
           {
             "text": "Me too!",
             "kind": "wrong",
@@ -303,6 +555,7 @@
   },
 
   "phone_customer": {
+    "npc": "phone_customer",
     "start": "busy",
     "nodes": {
       "busy": {

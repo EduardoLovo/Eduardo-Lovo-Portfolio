@@ -1,0 +1,14 @@
+{
+  "items": {
+    "espresso": { "name": "Espresso", "price": 250, "kind": "drink" },
+    "cappuccino": { "name": "Cappuccino", "price": 350, "kind": "drink" },
+    "latte": { "name": "Latte", "price": 375, "kind": "drink" },
+    "hot_chocolate": { "name": "Hot chocolate", "price": 300, "kind": "drink" },
+    "iced_coffee": { "name": "Iced coffee", "price": 400, "kind": "drink" },
+    "cookie": { "name": "Cookie", "price": 150, "kind": "food" },
+    "blueberry_muffin": { "name": "Blueberry muffin", "price": 250, "kind": "food" },
+    "croissant": { "name": "Croissant", "price": 300, "kind": "food" },
+    "cheese_sandwich": { "name": "Cheese sandwich", "price": 500, "kind": "food" }
+  },
+  "sizes": { "small": 0, "medium": 50, "large": 100 }
+}
