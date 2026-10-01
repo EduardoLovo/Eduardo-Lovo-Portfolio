@@ -11,6 +11,8 @@ export default function GameCanvas() {
 
   useEffect(() => {
     const game = new Phaser.Game(createGameConfig(containerRef.current!));
+    // Facilita depurar pelo console do navegador (só em desenvolvimento)
+    if (process.env.NODE_ENV === "development") Object.assign(window, { cafeGame: game });
     return () => game.destroy(true);
   }, []);
 

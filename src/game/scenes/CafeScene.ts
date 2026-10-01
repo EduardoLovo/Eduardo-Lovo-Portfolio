@@ -1,63 +1,67 @@
 import * as Phaser from "phaser";
 import { EventBus } from "../EventBus";
-import { GAME_HEIGHT, GAME_WIDTH, TILE } from "../constants";
+import { CHARACTERS, createCharacterAnimations } from "../characters";
+import { Player } from "../entities/Player";
+import { Npc } from "../entities/Npc";
 
-const PLAYER_SPEED = 120;
+// Animação de cada NPC no seu ponto do mapa (camada "Points" do Tiled)
+const NPCS = [
+  { point: "emma", animation: "idle-down" },
+  { point: "leo", animation: "idle-down" },
+  { point: "mia", animation: "idle-down" },
+  { point: "mr_brown", animation: "sit-left" },
+  { point: "phone_customer", animation: "phone" },
+] as const;
 
-// Versão provisória: piso quadriculado e um quadrado no lugar do personagem.
-// Na etapa 2 o mapa do Tiled substitui o piso; na etapa 3 entra o sprite da LimeZu.
+// A camada "Above" fica sempre na frente dos personagens (que usam a posição y como profundidade)
+const ABOVE_DEPTH = 10_000;
+
 export class CafeScene extends Phaser.Scene {
-  private player!: Phaser.GameObjects.Rectangle;
-  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  private wasd!: Record<"up" | "down" | "left" | "right", Phaser.Input.Keyboard.Key>;
+  private player!: Player;
 
   constructor() {
     super("Cafe");
   }
 
   create() {
-    this.drawPlaceholderFloor();
+    const map = this.make.tilemap({ key: "cafe-map" });
+    const tilesets = map.tilesets.map((tileset) => map.addTilesetImage(tileset.name, tileset.name)!);
+    for (const name of ["Floor", "Walls", "Furniture", "Decor"]) map.createLayer(name, tilesets);
+    map.createLayer("Above", tilesets)?.setDepth(ABOVE_DEPTH);
 
-    this.player = this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT - TILE * 2, 24, 28, 0x7c5cff);
-    this.physics.add.existing(this.player);
-    (this.player.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true);
+    for (const sheet of new Set(Object.values(CHARACTERS))) createCharacterAnimations(this, sheet);
 
-    const keyboard = this.input.keyboard!;
-    this.cursors = keyboard.createCursorKeys();
-    this.wasd = {
-      up: keyboard.addKey("W"),
-      down: keyboard.addKey("S"),
-      left: keyboard.addKey("A"),
-      right: keyboard.addKey("D"),
-    };
+    const colliders = this.createColliders(map);
+    for (const { point, animation } of NPCS) {
+      const { x, y } = this.getPoint(map, point);
+      new Npc(this, x, y, CHARACTERS[point], animation);
+      // Bloqueia os pés do NPC para o jogador não atravessar
+      colliders.add(this.add.zone(x, y - 5, 18, 10));
+    }
 
-    this.add
-      .text(8, 8, "Bean There Café — etapa 1", { fontFamily: "monospace", fontSize: "12px", color: "#e7e7ef" })
-      .setAlpha(0.7);
+    const spawn = this.getPoint(map, "player");
+    this.player = new Player(this, spawn.x, spawn.y);
+    this.physics.add.collider(this.player, colliders);
 
     EventBus.emit("scene-ready", this.scene.key);
   }
 
   update() {
-    const body = this.player.body as Phaser.Physics.Arcade.Body;
-    const left = this.cursors.left.isDown || this.wasd.left.isDown;
-    const right = this.cursors.right.isDown || this.wasd.right.isDown;
-    const up = this.cursors.up.isDown || this.wasd.up.isDown;
-    const down = this.cursors.down.isDown || this.wasd.down.isDown;
-
-    body.setVelocity(Number(right) - Number(left), Number(down) - Number(up));
-    // Normaliza para andar na mesma velocidade também na diagonal
-    body.velocity.normalize().scale(PLAYER_SPEED);
+    this.player.update();
   }
 
-  private drawPlaceholderFloor() {
-    const floor = this.add.graphics();
-    for (let y = 0; y < GAME_HEIGHT; y += TILE) {
-      for (let x = 0; x < GAME_WIDTH; x += TILE) {
-        const even = (x / TILE + y / TILE) % 2 === 0;
-        floor.fillStyle(even ? 0x3a2a32 : 0x33242c);
-        floor.fillRect(x, y, TILE, TILE);
-      }
+  // Cada retângulo da camada "Collision" do Tiled vira um corpo estático invisível
+  private createColliders(map: Phaser.Tilemaps.Tilemap) {
+    const group = this.physics.add.staticGroup();
+    for (const obj of map.getObjectLayer("Collision")?.objects ?? []) {
+      group.add(this.add.zone(obj.x! + obj.width! / 2, obj.y! + obj.height! / 2, obj.width!, obj.height!));
     }
+    return group;
+  }
+
+  private getPoint(map: Phaser.Tilemaps.Tilemap, name: string) {
+    const point = map.findObject("Points", (obj) => obj.name === name);
+    if (!point) throw new Error(`Ponto "${name}" não encontrado na camada Points do mapa`);
+    return { x: point.x!, y: point.y! };
   }
 }

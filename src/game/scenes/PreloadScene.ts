@@ -1,5 +1,7 @@
 import * as Phaser from "phaser";
-import { GAME_HEIGHT, GAME_WIDTH } from "../constants";
+import { assetUrl } from "../assets";
+import { CHARACTERS, FRAME } from "../characters";
+import { GAME_HEIGHT, GAME_WIDTH, TILESETS } from "../constants";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -21,8 +23,17 @@ export class PreloadScene extends Phaser.Scene {
       bar.width = (barWidth - 4) * value;
     });
 
-    // Etapa 2 em diante: tileset, mapa do Tiled e personagens entram aqui
-    // ex.: this.load.image("tiles", assetUrl("tiles/interiors.png"));
+    // O mapa não tem arte (só índices), então fica no repositório; os tilesets vêm do storage
+    this.load.tilemapTiledJSON("cafe-map", "/game/maps/cafe.tmj");
+    for (const name of TILESETS) {
+      this.load.image(name, assetUrl(`tilesets/${name}.png`));
+    }
+    for (const sheet of new Set(Object.values(CHARACTERS))) {
+      this.load.spritesheet(sheet, assetUrl(`characters/${sheet}.png`), {
+        frameWidth: FRAME.width,
+        frameHeight: FRAME.height,
+      });
+    }
   }
 
   create() {
