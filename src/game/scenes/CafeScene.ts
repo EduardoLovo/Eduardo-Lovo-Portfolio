@@ -2,7 +2,9 @@ import * as Phaser from "phaser";
 import { EventBus } from "../EventBus";
 import { CHARACTERS, createCharacterAnimations } from "../characters";
 import { NPCS, type NpcId } from "../npcs";
-import { gameStore, hasFlag } from "../systems/GameStore";
+import { gameStore, hasFlag, type GameState } from "../systems/GameStore";
+import { assetUrl } from "../assets";
+import { isMuted, MUSIC, SOUNDS, type SoundName } from "../sounds";
 import { Player } from "../entities/Player";
 import { Npc } from "../entities/Npc";
 import { TalkPrompt } from "../entities/TalkPrompt";
@@ -111,6 +113,7 @@ export class CafeScene extends Phaser.Scene {
   private startDialog(npc: Npc) {
     this.inDialog = true;
     this.prompt.hide();
+    this.playSound("open");
     EventBus.emit("dialog:start", npc.id);
   }
 
@@ -130,20 +133,34 @@ export class CafeScene extends Phaser.Scene {
       if (!this.inDialog) this.actionQueued = true;
     });
 
+    const offPlay = EventBus.on("sound:play", (name) => this.playSound(name));
+    const offMute = EventBus.on("sound:mute", (muted) => {
+      this.sound.mute = muted;
+    });
+    this.sound.mute = isMuted();
+
     let readyTimer: Phaser.Time.TimerEvent | null = null;
+    let previous = gameStore.get();
     const offStore = gameStore.subscribe(() => {
       const state = gameStore.get();
+      this.onStateChange(previous, state);
+      previous = state;
+
       if (hasFlag(state, "hasPaid") && !hasFlag(state, "orderReady") && !readyTimer) {
         readyTimer = this.time.delayedCall(ORDER_READY_MS, () =>
           gameStore.dispatch({ type: "effects", effects: [{ type: "setFlag", flag: "orderReady" }] }),
         );
       }
     });
+    // "Jogar de novo" já começa jogando (sem passar pela introdução)
+    if (gameStore.get().screen === "playing") this.enterCafe();
 
     const cleanup = () => {
       offDialogEnd();
       offRestart();
       offAction();
+      offPlay();
+      offMute();
       offStore();
       this.events.off(Phaser.Scenes.Events.SHUTDOWN, cleanup);
       this.events.off(Phaser.Scenes.Events.DESTROY, cleanup);
@@ -151,6 +168,33 @@ export class CafeScene extends Phaser.Scene {
     // SHUTDOWN no restart da cena; DESTROY quando o jogo é destruído (saída da página)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, cleanup);
     this.events.once(Phaser.Scenes.Events.DESTROY, cleanup);
+  }
+
+  // Sons ligados ao andamento do jogo
+  private onStateChange(before: GameState, after: GameState) {
+    const turnedOn = (flag: string) => !hasFlag(before, flag) && hasFlag(after, flag);
+    if (before.screen === "intro" && after.screen === "playing") this.enterCafe();
+    if (turnedOn("hasPaid")) this.playSound("coins");
+    if (turnedOn("orderReady")) this.playSound("bell"); // sino do balcão: pedido pronto
+    if (before.screen !== "result" && after.screen === "result") this.playSound("fanfare");
+  }
+
+  // Porta abrindo + sino, e a música de fundo (carregada só agora, para não atrasar o início)
+  private enterCafe() {
+    this.playSound("door");
+    this.time.delayedCall(250, () => this.playSound("bell"));
+
+    // A música pertence ao gerenciador de som do jogo: continua tocando entre reinícios da cena
+    if (this.sound.get(MUSIC.key)) return;
+    const play = () => this.sound.play(MUSIC.key, { loop: true, volume: MUSIC.volume });
+    if (this.cache.audio.exists(MUSIC.key)) return play();
+    this.load.audio(MUSIC.key, assetUrl(`audio/${MUSIC.file}`));
+    this.load.once(Phaser.Loader.Events.COMPLETE, play);
+    this.load.start();
+  }
+
+  playSound(name: SoundName) {
+    this.sound.play(name, { volume: SOUNDS[name].volume });
   }
 
   // Cada retângulo da camada "Collision" do Tiled vira um corpo estático invisível

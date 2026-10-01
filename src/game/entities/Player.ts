@@ -1,14 +1,19 @@
 import * as Phaser from "phaser";
 import { CHARACTERS, type Direction } from "../characters";
 import { virtualInput } from "../input";
+import { SOUNDS } from "../sounds";
 
 const SPEED = 120;
+const STEP_INTERVAL_MS = 300;
+const FOOTSTEPS = ["footstep0", "footstep1", "footstep2", "footstep3"] as const;
 
 type Keys = Record<Direction, Phaser.Input.Keyboard.Key[]>;
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private keys: Keys;
   private facing: Direction = "up";
+  private nextStepAt = 0;
+  private step = 0;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, CHARACTERS.player);
@@ -49,11 +54,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       // Na diagonal, prioriza a animação horizontal
       this.facing = dx > 0 ? "right" : dx < 0 ? "left" : dy > 0 ? "down" : "up";
       this.play(`${this.texture.key}-walk-${this.facing}`, true);
+      this.footstep();
     } else {
       this.play(`${this.texture.key}-idle-${this.facing}`, true);
     }
 
     // Quem está mais embaixo na tela é desenhado na frente
     this.setDepth(this.y);
+  }
+
+  // Passos alternados enquanto anda
+  private footstep() {
+    const now = this.scene.time.now;
+    if (now < this.nextStepAt) return;
+    this.nextStepAt = now + STEP_INTERVAL_MS;
+    const name = FOOTSTEPS[this.step++ % FOOTSTEPS.length];
+    this.scene.sound.play(name, { volume: SOUNDS[name].volume });
   }
 }

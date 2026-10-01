@@ -42,6 +42,38 @@ export default function CafePage() {
           Controles: arraste o direcional para andar e toque em E para conversar. Nas conversas, toque na resposta.
         </span>
       </p>
+
+      <footer className="border-t border-border pt-4 text-xs text-muted">
+        <h2 className="mb-2 font-semibold text-foreground">Créditos</h2>
+        <ul className="flex flex-col gap-1">
+          <li>
+            Arte:{" "}
+            <a href="https://limezu.itch.io/moderninteriors" target="_blank" rel="noreferrer" className="underline">
+              Modern Interiors
+            </a>{" "}
+            por LimeZu
+          </li>
+          <li>
+            Música: &quot;Jazz Piano Medley #81&quot; —{" "}
+            <a href="https://soundcloud.com/tri-tachyon/albums" target="_blank" rel="noreferrer" className="underline">
+              Music by Tri-Tachyon
+            </a>{" "}
+            (
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="underline">
+              CC-BY 4.0
+            </a>
+            )
+          </li>
+          <li>
+            Efeitos sonoros:{" "}
+            <a href="https://kenney.nl/assets/rpg-audio" target="_blank" rel="noreferrer" className="underline">
+              Kenney
+            </a>{" "}
+            (CC0) e sons gerados por código
+          </li>
+          <li>Fonte: Pixelify Sans (SIL Open Font License)</li>
+        </ul>
+      </footer>
     </main>
   );
 }

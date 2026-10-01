@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import { assetUrl } from "../assets";
 import { CHARACTERS, FRAME } from "../characters";
 import { GAME_HEIGHT, GAME_WIDTH, TILESETS } from "../constants";
+import { SOUNDS } from "../sounds";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -35,6 +36,10 @@ export class PreloadScene extends Phaser.Scene {
       });
     }
     this.load.spritesheet("emotes", assetUrl("ui/emotes.png"), { frameWidth: 32, frameHeight: 32 });
+    // Efeitos são pequenos e entram já; a música (maior) é carregada depois, na CafeScene
+    for (const [name, { file }] of Object.entries(SOUNDS)) {
+      this.load.audio(name, assetUrl(`audio/${file}`));
+    }
   }
 
   create() {

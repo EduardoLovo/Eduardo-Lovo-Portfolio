@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { hasFlag } from "@/game/systems/GameStore";
+import { isMuted, setMuted } from "@/game/sounds";
 import { describeOrder, formatMoney } from "@/game/systems/order";
 import { useGameState } from "../useGameState";
 import { PIXEL_FONT } from "./pixel";
@@ -8,7 +10,13 @@ import { PIXEL_FONT } from "./pixel";
 // Carteira, pedido e checklist da missão, por cima do jogo
 export default function Hud() {
   const state = useGameState();
+  const [muted, setMutedState] = useState(isMuted);
   if (state.screen !== "playing") return null;
+
+  const toggleMute = () => {
+    setMuted(!muted);
+    setMutedState(!muted);
+  };
 
   const steps = [
     { label: "Fazer o pedido com o Leo", done: hasFlag(state, "hasOrdered") },
@@ -25,7 +33,18 @@ export default function Hud() {
       style={PIXEL_FONT}
     >
       <div className={`${box} flex flex-col gap-0.5`}>
-        <span className="font-bold">💵 {formatMoney(state.wallet)}</span>
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-bold">💵 {formatMoney(state.wallet)}</span>
+          <button
+            type="button"
+            onClick={toggleMute}
+            aria-label={muted ? "Ligar som" : "Desligar som"}
+            title={muted ? "Ligar som" : "Desligar som"}
+            className="pointer-events-auto rounded px-1 hover:bg-[#e4dccf]"
+          >
+            {muted ? "🔇" : "🔊"}
+          </button>
+        </div>
         {order.length > 0 && (
           <ul>
             {order.map((item) => (

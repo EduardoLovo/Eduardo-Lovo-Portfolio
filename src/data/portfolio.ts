@@ -193,6 +193,25 @@ export const projects: Project[] = [
   },
 ];
 
+// Seção do jogo (logo depois de Projetos)
+export const game = {
+  title: "Bean There Café",
+  subtitle: "Mini jogo em pixel art para praticar inglês",
+  description:
+    "Você entra numa cafeteria nos Estados Unidos e precisa conversar, pedir um café, pagar e retirar o pedido — tudo em inglês. Cada resposta recebe um retorno: natural, entendível ou errada, com uma dica em português.",
+  highlights: [
+    "Phaser 4 dentro do Next.js, carregado só quando o visitante clica em Jogar",
+    "Mapa feito no Tiled, com colisão e áreas de conversa definidas no próprio editor",
+    "Diálogos em JSON com motor próprio em TypeScript puro, testado com Vitest",
+    "Estado do jogo em um reducer compartilhado entre o Phaser e o React",
+    "Controles de toque no celular, voz da fala em inglês e efeitos sonoros gerados por código",
+  ],
+  tags: ["Phaser", "Next.js", "TypeScript", "React", "Tiled", "Vitest"],
+  image: "/projeto-bean-there-cafe.png",
+  playUrl: "/cafe",
+  codeUrl: "https://github.com/EduardoLovo/Eduardo-Lovo-Portfolio/tree/main/src/game",
+};
+
 // Experiência / formação (linha do tempo)
 export type TimelineItem = {
   period: string;

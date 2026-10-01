@@ -13,6 +13,7 @@ import {
   type DialogState,
 } from "@/game/systems/DialogEngine";
 import { gameStore, hasFlag } from "@/game/systems/GameStore";
+import { playSound } from "@/game/sounds";
 import type { ChoiceKind, DialogNode, Dialogs } from "@/game/types";
 import dialogsJson from "@/data/cafe/dialogs.json";
 import { useGameState } from "../useGameState";
@@ -101,6 +102,11 @@ export default function DialogBox({ docked = false }: { docked?: boolean }) {
     return () => clearInterval(timer);
   }, [typing, text]);
 
+  // "Blip" a cada 3 letras, como nos jogos antigos
+  useEffect(() => {
+    if (typing && typed % 3 === 1) playSound("blip");
+  }, [typing, typed]);
+
   const pick = useCallback(
     (optionIndex: number) => {
       if (!dialog || !state || !node) return;
@@ -109,6 +115,7 @@ export default function DialogBox({ docked = false }: { docked?: boolean }) {
       const { state: next, choice } = choose(dialog, state, option.index);
 
       gameStore.dispatch({ type: "answer", question: nodeKey, kind: choice.kind });
+      playSound(choice.kind === "natural" ? "correct" : choice.kind);
       if (choice.kind !== "wrong") {
         if (choice.effects) gameStore.dispatch({ type: "effects", effects: choice.effects });
         learn(node);

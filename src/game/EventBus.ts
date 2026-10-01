@@ -1,6 +1,7 @@
 // Ponte entre o Phaser (mundo do jogo) e o React (interface).
 // Não importa nada do Phaser, para a UI poder usar sem puxar a biblioteca.
 import type { NpcId } from "./npcs";
+import type { SoundName } from "./sounds";
 
 // Eventos e o que cada um carrega
 type Events = {
@@ -9,6 +10,8 @@ type Events = {
   "dialog:end": []; // React → Phaser: diálogo fechado, jogador volta a andar
   "game:restart": []; // React → Phaser: "Jogar de novo" na tela de resultado
   "input:action": []; // Botão "E" da tela de toque: conversar (Phaser) ou confirmar no diálogo (React)
+  "sound:play": [name: SoundName]; // React → Phaser: tocar um efeito
+  "sound:mute": [muted: boolean]; // React → Phaser: botão de mudo
 };
 
 type Handler<E extends keyof Events> = (...args: Events[E]) => void;
