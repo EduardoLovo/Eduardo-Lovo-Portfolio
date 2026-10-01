@@ -4,12 +4,21 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiCheckCircle, FiGithub, FiPlay } from "react-icons/fi";
 import SectionHeading from "./SectionHeading";
+import Reveal from "./Reveal";
 import { game } from "@/data/portfolio";
 
 export default function GameShowcase() {
   return (
     <section id="jogo" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-24">
       <SectionHeading eyebrow="Projeto pessoal" title="Aprenda inglês jogando" />
+
+      <Reveal delay={0.1} className="mt-6 max-w-3xl space-y-3 text-muted">
+        {game.intro.map((paragraph) => (
+          <p key={paragraph} className="leading-relaxed">
+            {paragraph}
+          </p>
+        ))}
+      </Reveal>
 
       <motion.article
         initial={{ opacity: 0, y: 30 }}

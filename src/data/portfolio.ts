@@ -195,6 +195,11 @@ export const projects: Project[] = [
 
 // Seção do jogo (logo depois de Projetos)
 export const game = {
+  // Texto logo abaixo do título da seção, em primeira pessoa
+  intro: [
+    "Estou estudando inglês e pensei em juntar programação e inglês, criando um mini jogo que simula conversas do dia a dia, como pedir um café, pagar a conta e puxar papo com alguém na mesa ao lado.",
+    "A ideia é praticar o inglês de um jeito leve: cada resposta mostra se soou natural, entendível ou errada, sempre com uma dica em português para aprender com o erro.",
+  ],
   title: "Bean There Café",
   subtitle: "Mini jogo em pixel art para praticar inglês",
   description:
