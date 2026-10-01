@@ -157,6 +157,16 @@ export const projects: Project[] = [
     ],
   },
   {
+    title: "Confeitaria da Re — Cardápio Digital",
+    description:
+      "Cardápio digital próprio (sem comissão de marketplace) para uma confeitaria: catálogo de pronta entrega com carrinho, checkout e acompanhamento do pedido, além de encomendas para festas via WhatsApp. Painel administrativo com pedidos em tempo real e alerta sonoro, protegido por verificação em duas etapas (2FA) e RLS no banco.",
+    tags: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Tailwind", "Zod"],
+    links: [
+      { label: "Ver site", url: "https://confeitaria-da-re.vercel.app/" },
+      { label: "Código", url: "https://github.com/EduardoLovo/Confeitaria-da-Re" },
+    ],
+  },
+  {
     title: "Mais projetos no GitHub",
     description:
       "Estudos, projetos das formações e experimentos com novas tecnologias ficam no meu GitHub.",
