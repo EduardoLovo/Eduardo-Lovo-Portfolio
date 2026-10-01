@@ -79,10 +79,22 @@ body {
   html,
   body {
     background: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
+  .cv-page {
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  /* Cada folha ocupa exatamente uma página A4 */
   .cv-sheet {
+    height: 297mm;
+    overflow: hidden;
     box-shadow: none !important;
     margin: 0 !important;
+  }
+  .cv-sheet-next {
+    break-before: page;
   }
   .no-print {
     display: none !important;

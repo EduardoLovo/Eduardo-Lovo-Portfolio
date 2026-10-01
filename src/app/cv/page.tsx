@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   FiMail,
   FiPhone,
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function CVPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background py-8">
+    <div className="cv-page flex min-h-screen flex-col items-center bg-background py-8">
       {/* Barra de ações (não aparece na impressão/PDF) */}
       <div className="no-print mb-6 flex items-center gap-4">
         <a
@@ -185,7 +186,55 @@ export default function CVPage() {
               ))}
             </div>
           </section>
+
         </main>
+      </div>
+
+      {/* Página 2 — Projetos Dev (folha própria, sem a lateral) */}
+      <div className="cv-sheet cv-sheet-next mt-8 p-12 shadow-2xl">
+        <header className="mb-8 border-b border-[#e5e7eb] pb-4">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Projetos Dev
+          </h2>
+          <p className="mt-0.5 text-sm font-medium cv-accent">
+            {personal.name} · {personal.role}
+          </p>
+        </header>
+
+        <div className="space-y-6">
+          {cv.projects.map((p) => (
+            <div key={p.name} className="flex items-center gap-6">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-[15px] font-semibold text-gray-900">
+                  {p.name}
+                </h3>
+                <p className="text-[12px] font-medium cv-accent">{p.stack}</p>
+                <p className="mt-1 text-[13px] leading-snug text-gray-700">
+                  {p.description}
+                </p>
+                <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
+                  {p.links.map((link) => (
+                    <li
+                      key={link}
+                      className="flex items-center gap-1 text-[12px] cv-accent"
+                    >
+                      <FiExternalLink className="shrink-0" />
+                      {link.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Image
+                src={p.image}
+                alt={p.name}
+                width={640}
+                height={400}
+                sizes="260px"
+                className="aspect-[16/10] w-[68mm] shrink-0 rounded-lg border border-[#e5e7eb] object-cover object-top"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

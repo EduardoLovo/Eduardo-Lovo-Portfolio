@@ -41,7 +41,7 @@ export const about = {
   // Números de destaque (edite ou remova)
   stats: [
     { label: "E-commerces no ar", value: "2" },
-    { label: "Tecnologias", value: "12+" },
+    { label: "Tecnologias", value: "20+" },
     { label: "Vontade de aprender", value: "∞" },
   ],
 };
@@ -58,19 +58,36 @@ export const skills: { category: string; items: string[] }[] = [
       "Tailwind CSS",
       "Zustand",
       "Framer Motion",
+      "GSAP",
     ],
   },
   {
     category: "Backend",
-    items: ["NestJS", "Node.js", "REST APIs", "JWT & Passport", "Nodemailer"],
+    items: [
+      "NestJS",
+      "Node.js",
+      "REST APIs",
+      "JWT & Passport",
+      "Auth.js",
+      "Zod",
+      "Nodemailer",
+    ],
   },
   {
     category: "Banco de Dados",
-    items: ["PostgreSQL", "Prisma ORM"],
+    items: ["PostgreSQL", "Prisma ORM", "Supabase", "Sanity CMS"],
   },
   {
     category: "Ferramentas & DevOps",
-    items: ["Git", "GitHub", "AWS S3", "Jest", "Swagger", "Vercel"],
+    items: [
+      "Git",
+      "GitHub",
+      "AWS S3",
+      "Cloudflare R2",
+      "Jest",
+      "Swagger",
+      "Vercel",
+    ],
   },
 ];
 
@@ -150,7 +167,7 @@ export const projects: Project[] = [
     description:
       "Pokédex dos 151 Pokémon de Kanto consumindo a PokéAPI, com navegação em profundidade: ao rolar, os cards \"mergulham\" em direção à câmera. Busca por nome ou número, navegação por teclado, tema claro/escuro e suporte a movimento reduzido.",
     tags: ["React", "TypeScript", "Vite", "GSAP", "PokéAPI"],
-    image: "/projeto-pokemon.png",
+    image: "/projeto-pokemon2.png",
     links: [
       { label: "Ver site", url: "https://api-pokemon-ten.vercel.app" },
       { label: "Código", url: "https://github.com/EduardoLovo/Api-Pokemon" },
@@ -161,6 +178,7 @@ export const projects: Project[] = [
     description:
       "Cardápio digital próprio (sem comissão de marketplace) para uma confeitaria: catálogo de pronta entrega com carrinho, checkout e acompanhamento do pedido, além de encomendas para festas via WhatsApp. Painel administrativo com pedidos em tempo real e alerta sonoro, protegido por verificação em duas etapas (2FA) e RLS no banco.",
     tags: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Tailwind", "Zod"],
+    image: "/confeitaria-da-re.png",
     links: [
       { label: "Ver site", url: "https://confeitaria-da-re.vercel.app/" },
       { label: "Código", url: "https://github.com/EduardoLovo/Confeitaria-da-Re" },
