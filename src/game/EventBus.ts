@@ -8,6 +8,7 @@ type Events = {
   "dialog:start": [npcId: NpcId]; // Phaser → React: jogador apertou E perto de um NPC
   "dialog:end": []; // React → Phaser: diálogo fechado, jogador volta a andar
   "game:restart": []; // React → Phaser: "Jogar de novo" na tela de resultado
+  "input:action": []; // Botão "E" da tela de toque: conversar (Phaser) ou confirmar no diálogo (React)
 };
 
 type Handler<E extends keyof Events> = (...args: Events[E]) => void;

@@ -30,7 +30,8 @@ const learn = (node: DialogNode) => {
   if (node.learn?.length) gameStore.dispatch({ type: "learn", expressions: node.learn });
 };
 
-export default function DialogBox() {
+/** `docked`: no celular a caixa fica abaixo do jogo em vez de cobri-lo */
+export default function DialogBox({ docked = false }: { docked?: boolean }) {
   const { playerName } = useGameState();
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [state, setState] = useState<DialogState | null>(null);
@@ -150,6 +151,12 @@ export default function DialogBox() {
     setShowTranslation(!showTranslation);
   }, [showTranslation, nodeKey]);
 
+  // Botão "E" da tela de toque
+  useEffect(() => {
+    if (!conversation) return;
+    return EventBus.on("input:action", confirm);
+  }, [conversation, confirm]);
+
   // Teclado: E/Enter/Espaço confirmam, setas ou W/S escolhem, 1-3 escolhem direto, T traduz, Esc fecha
   useEffect(() => {
     if (!conversation) return;
@@ -189,7 +196,9 @@ export default function DialogBox() {
     <div
       role="dialog"
       aria-label={`Conversa com ${npcName}`}
-      className="absolute inset-x-2 bottom-2 z-20 flex max-h-[85%] flex-col gap-2 overflow-y-auto rounded-lg border-4 border-[#3b2a33] bg-[#f3eee6] p-3 text-[#1b1420] shadow-xl sm:inset-x-3 sm:bottom-3 sm:p-4"
+      className={`${
+        docked ? "relative" : "absolute inset-x-2 bottom-2 z-20 max-h-[85%] overflow-y-auto sm:inset-x-3 sm:bottom-3"
+      } flex flex-col gap-2 rounded-lg border-4 border-[#3b2a33] bg-[#f3eee6] p-3 text-[#1b1420] shadow-xl sm:p-4`}
       style={PIXEL_FONT}
     >
       <div className="flex items-center justify-between gap-2">
@@ -208,7 +217,12 @@ export default function DialogBox() {
         </div>
       </div>
 
-      <p className="min-h-[1.5em] text-base leading-snug sm:text-lg" aria-live="polite">
+      {/* Tocar/clicar na fala pula a digitação (no celular não há tecla E durante o diálogo) */}
+      <p
+        className="min-h-[1.5em] text-base leading-snug sm:text-lg"
+        aria-live="polite"
+        onClick={phase === "typing" ? confirm : undefined}
+      >
         {text.slice(0, typed)}
         {phase === "typing" && <span className="animate-pulse">▌</span>}
       </p>

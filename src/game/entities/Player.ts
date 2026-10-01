@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { CHARACTERS, type Direction } from "../characters";
+import { virtualInput } from "../input";
 
 const SPEED = 120;
 
@@ -35,7 +36,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   /** `canMove` é falso durante diálogos e nas telas de introdução e resultado */
   update(canMove: boolean) {
-    const isDown = (direction: Direction) => canMove && this.keys[direction].some((key) => key.isDown);
+    // Teclado ou direcional de toque
+    const isDown = (direction: Direction) =>
+      canMove && (virtualInput[direction] || this.keys[direction].some((key) => key.isDown));
     const dx = Number(isDown("right")) - Number(isDown("left"));
     const dy = Number(isDown("down")) - Number(isDown("up"));
 

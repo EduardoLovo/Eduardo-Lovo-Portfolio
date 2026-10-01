@@ -6,7 +6,7 @@ import { gameStore, summarize } from "@/game/systems/GameStore";
 import { useGameState } from "../useGameState";
 import { PANEL, PIXEL_FONT } from "./pixel";
 
-export default function ResultScreen() {
+export default function ResultScreen({ docked = false }: { docked?: boolean }) {
   const state = useGameState();
   const [showGlossary, setShowGlossary] = useState(false);
   if (state.screen !== "result") return null;
@@ -19,7 +19,13 @@ export default function ResultScreen() {
   };
 
   return (
-    <div className="absolute inset-0 z-30 flex items-center justify-center overflow-y-auto bg-[#1b1420]/70 p-2 sm:p-4">
+    <div
+      className={
+        docked
+          ? "flex justify-center"
+          : "absolute inset-0 z-30 flex items-center justify-center overflow-y-auto bg-[#1b1420]/70 p-2 sm:p-4"
+      }
+    >
       <div
         className={`${PANEL} flex w-full max-w-md flex-col gap-2 p-3 text-sm sm:gap-3 sm:p-5 sm:text-base`}
         style={PIXEL_FONT}

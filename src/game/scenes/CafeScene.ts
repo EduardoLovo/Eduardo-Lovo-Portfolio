@@ -23,6 +23,8 @@ export class CafeScene extends Phaser.Scene {
   private inDialog = false;
   private prompt!: TalkPrompt;
   private talkKeys: Phaser.Input.Keyboard.Key[] = [];
+  // Botão "E" da tela de toque, consumido no próximo quadro
+  private actionQueued = false;
 
   constructor() {
     super("Cafe");
@@ -33,6 +35,7 @@ export class CafeScene extends Phaser.Scene {
     this.npcs = new Map();
     this.interactAreas = [];
     this.inDialog = false;
+    this.actionQueued = false;
 
     const map = this.make.tilemap({ key: "cafe-map" });
     const tilesets = map.tilesets.map((tileset) => map.addTilesetImage(tileset.name, tileset.name)!);
@@ -76,7 +79,9 @@ export class CafeScene extends Phaser.Scene {
     this.player.update(playing && !this.inDialog);
 
     // Lê todas as teclas todo quadro, para um aperto longe do NPC não "sobrar" para depois
-    const talkPressed = this.talkKeys.map((key) => Phaser.Input.Keyboard.JustDown(key)).includes(true);
+    const talkPressed =
+      this.talkKeys.map((key) => Phaser.Input.Keyboard.JustDown(key)).includes(true) || this.actionQueued;
+    this.actionQueued = false;
     const canTalk = playing && !this.inDialog;
 
     // Os pés do jogador precisam estar dentro da área de interação do NPC
@@ -120,6 +125,11 @@ export class CafeScene extends Phaser.Scene {
 
     const offRestart = EventBus.on("game:restart", () => this.scene.restart());
 
+    // Durante o diálogo o botão "E" é do React (confirmar); aqui só vale para começar a conversa
+    const offAction = EventBus.on("input:action", () => {
+      if (!this.inDialog) this.actionQueued = true;
+    });
+
     let readyTimer: Phaser.Time.TimerEvent | null = null;
     const offStore = gameStore.subscribe(() => {
       const state = gameStore.get();
@@ -133,6 +143,7 @@ export class CafeScene extends Phaser.Scene {
     const cleanup = () => {
       offDialogEnd();
       offRestart();
+      offAction();
       offStore();
       this.events.off(Phaser.Scenes.Events.SHUTDOWN, cleanup);
       this.events.off(Phaser.Scenes.Events.DESTROY, cleanup);

@@ -33,7 +33,15 @@ export default function CafePage() {
 
       <GameLauncher />
 
-      <p className="text-sm text-muted">Controles: setas ou WASD para andar · E (ou Espaço) para conversar e confirmar · 1-3 para responder · T traduz · Esc fecha.</p>
+      <p className="text-sm text-muted">
+        <span className="pointer-coarse:hidden">
+          Controles: setas ou WASD para andar · E (ou Espaço) para conversar e confirmar · 1-3 para responder · T traduz ·
+          Esc fecha.
+        </span>
+        <span className="hidden pointer-coarse:inline">
+          Controles: arraste o direcional para andar e toque em E para conversar. Nas conversas, toque na resposta.
+        </span>
+      </p>
     </main>
   );
 }

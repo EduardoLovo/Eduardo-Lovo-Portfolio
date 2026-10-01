@@ -8,11 +8,15 @@ import DialogBox from "./ui/DialogBox";
 import Hud from "./ui/Hud";
 import IntroScreen from "./ui/IntroScreen";
 import ResultScreen from "./ui/ResultScreen";
+import TouchControls from "./ui/TouchControls";
+import { GameFrame } from "./GameFrame";
+import { useIsTouch } from "./useIsTouch";
 
 // Cria a instância do Phaser ao montar e destrói ao sair da página.
 // Este arquivo só é baixado depois do clique em "Play" (ver GameLauncher).
 export default function GameCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isTouch = useIsTouch();
 
   useEffect(() => {
     // O estado vive num módulo: zera ao (re)entrar na página
@@ -23,14 +27,28 @@ export default function GameCanvas() {
     return () => game.destroy(true);
   }, []);
 
-  // A interface (diálogos, HUD) fica em HTML por cima do canvas
+  // A interface fica em HTML: por cima do canvas no computador, abaixo dele no celular (onde a tela é pequena)
   return (
-    <div className="relative h-full w-full">
-      <div ref={containerRef} className="h-full w-full" />
-      <Hud />
-      <DialogBox />
-      <IntroScreen />
-      <ResultScreen />
+    <div className="flex flex-col gap-3">
+      <GameFrame>
+        <div ref={containerRef} className="h-full w-full" />
+        <Hud />
+        {!isTouch && (
+          <>
+            <DialogBox />
+            <IntroScreen />
+            <ResultScreen />
+          </>
+        )}
+      </GameFrame>
+      {isTouch && (
+        <>
+          <DialogBox docked />
+          <IntroScreen docked />
+          <ResultScreen docked />
+          <TouchControls />
+        </>
+      )}
     </div>
   );
 }
