@@ -18,6 +18,7 @@ Arquivo: [`public/game/maps/cafe.tmj`](../../public/game/maps/cafe.tmj) — abra
 | `Above` | tiles | O que deve aparecer **na frente** do jogador (ex.: encosto de cadeira, topo de planta alta) |
 | `Collision` | objetos | Retângulos onde o jogador não passa (oculta por padrão — ligue o 👁 para ver) |
 | `Points` | objetos | Posições dos personagens e pontos especiais — **não renomeie** |
+| `Interact` | objetos | De onde o jogador conversa com cada NPC: os **pés** do jogador precisam estar dentro do retângulo. O nome do retângulo é o do NPC (oculta por padrão) |
 | `_Esboco` | objetos | Guia laranja do layout. Só para o editor; o jogo ignora. Esconda quando terminar |
 
 ## Pontos (`Points`)

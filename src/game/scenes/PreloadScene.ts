@@ -34,6 +34,7 @@ export class PreloadScene extends Phaser.Scene {
         frameHeight: FRAME.height,
       });
     }
+    this.load.spritesheet("emotes", assetUrl("ui/emotes.png"), { frameWidth: 32, frameHeight: 32 });
   }
 
   create() {

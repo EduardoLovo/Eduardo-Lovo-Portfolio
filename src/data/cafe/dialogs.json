@@ -1,0 +1,314 @@
+{
+  "emma": {
+    "start": "greet",
+    "nodes": {
+      "greet": {
+        "text": "Hi! Welcome to Bean There Café! How are you today?",
+        "translation": "Oi! Bem-vindo ao Bean There Café! Como você está hoje?",
+        "learn": ["How about you?"],
+        "choices": [
+          { "text": "I'm good, thanks! How about you?", "kind": "natural", "next": "first_time" },
+          {
+            "text": "I am fine, thank you. And you?",
+            "kind": "ok",
+            "next": "first_time",
+            "feedback": "Está correto, mas é bem formal — parece livro escolar. Nativos costumam dizer \"I'm good, thanks!\"."
+          },
+          {
+            "text": "Yes, thank you.",
+            "kind": "wrong",
+            "feedback": "Ela perguntou **como** você está, não fez uma pergunta de sim ou não."
+          }
+        ]
+      },
+      "first_time": {
+        "text": "I'm great, thanks for asking! Is this your first time here?",
+        "translation": "Estou ótima, obrigada por perguntar! É sua primeira vez aqui?",
+        "learn": ["first time", "cozy"],
+        "choices": [
+          { "text": "Yes, it is! It looks really cozy.", "kind": "natural", "next": "counter" },
+          {
+            "text": "Yes.",
+            "kind": "ok",
+            "next": "counter",
+            "feedback": "Só \"Yes\" soa seco. Complemente: \"Yes, it is!\"."
+          },
+          {
+            "text": "Yes, is my first time.",
+            "kind": "wrong",
+            "feedback": "Em inglês a frase precisa de sujeito: \"it **is** my first time\"."
+          }
+        ]
+      },
+      "counter": {
+        "text": "Awesome! You can order at the counter. Leo will help you. Enjoy!",
+        "translation": "Que ótimo! Você pode pedir no balcão. O Leo vai te atender. Aproveite!",
+        "learn": ["counter"],
+        "choices": [
+          { "text": "Thank you so much!", "kind": "natural" },
+          {
+            "text": "Okay.",
+            "kind": "ok",
+            "feedback": "Funciona, mas agradecer soa mais simpático: \"Thank you so much!\"."
+          },
+          {
+            "text": "Of nothing!",
+            "kind": "wrong",
+            "feedback": "\"De nada\" não se traduz assim! E aqui você deveria **agradecer**, não responder a um agradecimento."
+          }
+        ]
+      }
+    }
+  },
+
+  "leo": {
+    "start": "greet",
+    "nodes": {
+      "greet": {
+        "text": "Hey there! What can I get for you?",
+        "translation": "Olá! O que eu posso te servir?",
+        "learn": ["Can I get...?"],
+        "choices": [
+          {
+            "text": "Can I get a latte, please?",
+            "kind": "natural",
+            "next": "size",
+            "effects": [{ "type": "addToOrder", "item": "latte" }]
+          },
+          {
+            "text": "I want a latte.",
+            "kind": "ok",
+            "next": "size",
+            "feedback": "\"I want\" soa direto demais ao pedir. Prefira \"Can I get...\" ou \"I'd like...\".",
+            "effects": [{ "type": "addToOrder", "item": "latte" }]
+          },
+          {
+            "text": "Give me a latte.",
+            "kind": "wrong",
+            "feedback": "Soa grosseiro, como uma ordem. Use \"Can I get...?\"."
+          }
+        ]
+      },
+      "size": {
+        "text": "Sure! What size would you like? Small, medium or large?",
+        "translation": "Claro! Qual tamanho você quer? Pequeno, médio ou grande?",
+        "learn": ["size", "small / medium / large"],
+        "choices": [
+          {
+            "text": "Medium, please.",
+            "kind": "natural",
+            "next": "for_here",
+            "effects": [{ "type": "setOrderOption", "option": "size", "value": "medium" }]
+          },
+          {
+            "text": "The medium.",
+            "kind": "ok",
+            "next": "for_here",
+            "feedback": "Ele entendeu, mas o natural é só \"Medium, please.\".",
+            "effects": [{ "type": "setOrderOption", "option": "size", "value": "medium" }]
+          },
+          {
+            "text": "Middle, please.",
+            "kind": "wrong",
+            "feedback": "Para tamanho de bebida, o certo é \"medium\"."
+          }
+        ]
+      },
+      "for_here": {
+        "text": "Is that for here or to go?",
+        "translation": "É para comer aqui ou para viagem?",
+        "learn": ["for here", "to go"],
+        "choices": [
+          {
+            "text": "To go, please.",
+            "kind": "natural",
+            "next": "anything_else",
+            "effects": [{ "type": "setOrderOption", "option": "takeaway", "value": "to go" }]
+          },
+          {
+            "text": "I will take it.",
+            "kind": "ok",
+            "next": "anything_else",
+            "feedback": "Ele entendeu, mas o natural é \"To go\" (para viagem) ou \"For here\" (para comer aqui).",
+            "effects": [{ "type": "setOrderOption", "option": "takeaway", "value": "to go" }]
+          },
+          {
+            "text": "For travel.",
+            "kind": "wrong",
+            "feedback": "\"Para viagem\" em inglês é **\"to go\"**!"
+          }
+        ]
+      },
+      "anything_else": {
+        "text": "Got it. Anything else?",
+        "translation": "Entendi. Mais alguma coisa?",
+        "learn": ["Anything else?"],
+        "choices": [
+          {
+            "text": "Yes, can I also get a blueberry muffin?",
+            "kind": "natural",
+            "next": "name",
+            "effects": [{ "type": "addToOrder", "item": "blueberry_muffin" }]
+          },
+          {
+            "text": "And a muffin.",
+            "kind": "ok",
+            "next": "name",
+            "feedback": "Ele entendeu, mas uma frase completa soa melhor: \"Can I also get a blueberry muffin?\".",
+            "effects": [{ "type": "addToOrder", "item": "blueberry_muffin" }]
+          },
+          {
+            "text": "No, thanks.",
+            "kind": "wrong",
+            "feedback": "Opa, a missão pedia um muffin também!"
+          }
+        ]
+      },
+      "name": {
+        "text": "Perfect. Can I get a name for the order?",
+        "translation": "Perfeito. Pode me dizer um nome para o pedido?",
+        "learn": ["order"],
+        "choices": [
+          {
+            "text": "It's {playerName}.",
+            "kind": "natural",
+            "next": "pay",
+            "effects": [{ "type": "setFlag", "flag": "hasOrdered" }]
+          },
+          {
+            "text": "My name is {playerName}, I am from Brazil and I like coffee.",
+            "kind": "ok",
+            "next": "pay",
+            "feedback": "Simpático, mas ele só precisava do nome 😄",
+            "effects": [{ "type": "setFlag", "flag": "hasOrdered" }]
+          },
+          {
+            "text": "I have {playerName}.",
+            "kind": "wrong",
+            "feedback": "Nome não se \"tem\" em inglês — use \"It's...\" ou \"My name is...\"."
+          }
+        ]
+      },
+      "pay": {
+        "text": "Thanks, {playerName}! Please pay at the register with Mia.",
+        "translation": "Obrigado, {playerName}! Por favor, pague no caixa com a Mia.",
+        "learn": ["register"]
+      }
+    }
+  },
+
+  "mia": {
+    "start": "wait",
+    "nodes": {
+      "wait": {
+        "text": "Hi! Please order with Leo first.",
+        "translation": "Oi! Por favor, faça o pedido com o Leo primeiro."
+      }
+    }
+  },
+
+  "mr_brown": {
+    "start": "seat",
+    "nodes": {
+      "seat": {
+        "text": "(Mr. Brown is reading the newspaper.)",
+        "translation": "(O Mr. Brown está lendo o jornal.)",
+        "learn": ["Is this seat taken?"],
+        "choices": [
+          { "text": "Excuse me, is this seat taken?", "kind": "natural", "next": "where_from" },
+          {
+            "text": "Can I sit?",
+            "kind": "ok",
+            "next": "where_from",
+            "feedback": "Funciona, mas o jeito natural de pedir é \"Is this seat taken?\"."
+          },
+          {
+            "text": "This chair is free?",
+            "kind": "wrong",
+            "feedback": "Em perguntas, o verbo vem antes: \"Is this chair free?\" — ou o mais natural: \"Is this seat taken?\"."
+          }
+        ]
+      },
+      "where_from": {
+        "text": "Not at all, go ahead! I haven't seen you around. Where are you from?",
+        "translation": "De jeito nenhum, fique à vontade! Não te vi por aqui antes. De onde você é?",
+        "learn": ["Where are you from?"],
+        "choices": [
+          { "text": "I'm from Brazil.", "kind": "natural", "next": "what_do" },
+          {
+            "text": "Brazil.",
+            "kind": "ok",
+            "next": "what_do",
+            "feedback": "Entendível, mas a frase completa soa melhor: \"I'm from Brazil.\"."
+          },
+          {
+            "text": "I'm from Brazilian.",
+            "kind": "wrong",
+            "feedback": "\"Brazil\" é o país, \"Brazilian\" é a nacionalidade: \"I'm Brazilian\" ou \"I'm from Brazil\"."
+          }
+        ]
+      },
+      "what_do": {
+        "text": "Brazil! That's amazing. What do you do?",
+        "translation": "Brasil! Que incrível. O que você faz (de profissão)?",
+        "learn": ["What do you do?"],
+        "choices": [
+          { "text": "I'm a software developer.", "kind": "natural", "next": "weather" },
+          {
+            "text": "I work with computers.",
+            "kind": "ok",
+            "next": "weather",
+            "feedback": "Ele entendeu, mas o comum é dizer a profissão: \"I'm a...\"."
+          },
+          {
+            "text": "I do software developer.",
+            "kind": "wrong",
+            "feedback": "\"What do you do?\" pergunta a profissão — responda \"I'm a...\"."
+          }
+        ]
+      },
+      "weather": {
+        "text": "Nice! Lovely weather today, isn't it?",
+        "translation": "Legal! O tempo está ótimo hoje, não está?",
+        "learn": ["isn't it?"],
+        "choices": [
+          { "text": "Yeah, it's really nice out!", "kind": "natural", "next": "bye" },
+          {
+            "text": "Yes, the weather is good.",
+            "kind": "ok",
+            "next": "bye",
+            "feedback": "Correto, mas um pouco travado. Natural: \"Yeah, it's really nice out!\"."
+          },
+          {
+            "text": "Yes, it isn't.",
+            "kind": "wrong",
+            "feedback": "\"Isn't it?\" só confirma a frase. Para concordar: \"Yes, it is!\"."
+          }
+        ]
+      },
+      "bye": {
+        "text": "Well, it was nice talking to you. Enjoy your coffee!",
+        "translation": "Bom, foi um prazer conversar com você. Aproveite seu café!",
+        "learn": ["Nice talking to you"],
+        "choices": [
+          { "text": "Nice talking to you too!", "kind": "natural" },
+          {
+            "text": "Me too!",
+            "kind": "wrong",
+            "feedback": "Para retribuir, use \"**You** too!\" ou \"Nice talking to you too!\"."
+          }
+        ]
+      }
+    }
+  },
+
+  "phone_customer": {
+    "start": "busy",
+    "nodes": {
+      "busy": {
+        "text": "Sorry, I'm on a call right now.",
+        "translation": "Desculpe, estou numa ligação agora."
+      }
+    }
+  }
+}

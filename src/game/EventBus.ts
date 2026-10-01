@@ -1,23 +1,31 @@
 // Ponte entre o Phaser (mundo do jogo) e o React (interface).
 // Não importa nada do Phaser, para a UI poder usar sem puxar a biblioteca.
+import type { NpcId } from "./npcs";
 
-type Handler = (...args: unknown[]) => void;
+// Eventos e o que cada um carrega
+type Events = {
+  "scene-ready": [sceneKey: string];
+  "dialog:start": [npcId: NpcId]; // Phaser → React: jogador apertou E perto de um NPC
+  "dialog:end": []; // React → Phaser: diálogo fechado, jogador volta a andar
+};
+
+type Handler<E extends keyof Events> = (...args: Events[E]) => void;
 
 class Emitter {
-  private handlers = new Map<string, Set<Handler>>();
+  private handlers = new Map<keyof Events, Set<Handler<never>>>();
 
-  on(event: string, handler: Handler) {
+  on<E extends keyof Events>(event: E, handler: Handler<E>) {
     if (!this.handlers.has(event)) this.handlers.set(event, new Set());
-    this.handlers.get(event)!.add(handler);
+    this.handlers.get(event)!.add(handler as Handler<never>);
     return () => this.off(event, handler);
   }
 
-  off(event: string, handler: Handler) {
-    this.handlers.get(event)?.delete(handler);
+  off<E extends keyof Events>(event: E, handler: Handler<E>) {
+    this.handlers.get(event)?.delete(handler as Handler<never>);
   }
 
-  emit(event: string, ...args: unknown[]) {
-    this.handlers.get(event)?.forEach((handler) => handler(...args));
+  emit<E extends keyof Events>(event: E, ...args: Events[E]) {
+    this.handlers.get(event)?.forEach((handler) => (handler as Handler<E>)(...args));
   }
 }
 

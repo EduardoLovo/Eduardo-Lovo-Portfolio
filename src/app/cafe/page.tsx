@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Pixelify_Sans } from "next/font/google";
 import { FiArrowLeft } from "react-icons/fi";
 import { personal } from "@/data/portfolio";
 import GameLauncher from "@/components/cafe-game/GameLauncher";
+
+// Fonte pixel dos diálogos do jogo (usada via var(--font-pixel))
+const pixelFont = Pixelify_Sans({ subsets: ["latin"], variable: "--font-pixel" });
 
 export const metadata: Metadata = {
   title: `Bean There Café — ${personal.name}`,
@@ -11,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function CafePage() {
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
+    <main className={`${pixelFont.variable} mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8`}>
       <Link
         href="/"
         className="flex w-fit items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-foreground hover:bg-card"
@@ -29,7 +33,7 @@ export default function CafePage() {
 
       <GameLauncher />
 
-      <p className="text-sm text-muted">Controles: setas ou WASD para andar.</p>
+      <p className="text-sm text-muted">Controles: setas ou WASD para andar · E (ou Espaço) para conversar e confirmar · 1-3 para responder · T traduz · Esc fecha.</p>
     </main>
   );
 }
