@@ -13,7 +13,7 @@ export const cv = {
     {
       role: "Auxiliar de Escritório & Desenvolvedor Web",
       company: "Inphantil Móveis",
-      period: "2022 — Presente",
+      period: "2022 — 2026",
       location: "Jandaia do Sul, PR",
       bullets: [
         "Desenvolvi e mantenho em produção a plataforma de e-commerce do grupo (lojas Inphantil e Conceitual Pet): front-end React + Vite e API NestJS com PostgreSQL/Prisma.",

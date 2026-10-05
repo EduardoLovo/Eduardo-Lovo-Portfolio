@@ -235,7 +235,7 @@ export type TimelineItem = {
 
 export const experience: TimelineItem[] = [
   {
-    period: "2022 — Presente",
+    period: "2022 — 2026",
     title: "Auxiliar de Escritório & Desenvolvedor Web",
     place: "Inphantil Móveis · Jandaia do Sul, PR",
     description:
