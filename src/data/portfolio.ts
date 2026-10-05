@@ -9,7 +9,7 @@ export const personal = {
   role: "Desenvolvedor Full-Stack Júnior",
   // Frase curta que aparece no topo (hero)
   tagline:
-    "Transformo ideias em aplicações web rápidas, acessíveis e bonitas — do banco de dados à interface.",
+    "Transformo ideias em aplicações web rápidas, acessíveis e bonitas. Do banco de dados à interface.",
   location: "Jandaia do Sul, PR",
   phone: "(43) 99956-7684",
   // Link do WhatsApp (formato: 55 + DDD + número), com mensagem pronta
@@ -19,7 +19,7 @@ export const personal = {
   // Caminho do seu currículo em PDF (coloque o arquivo em /public)
   cvUrl: "/curriculo-eduardo.pdf",
   // Sua foto (arquivo em /public)
-  photo: "/eduardo.jpeg",
+  photo: "/eduardo.jpg",
   // Anos de experiência / status
   available: true, // mostra o selo "Disponível para novas vagas"
 };
@@ -82,6 +82,7 @@ export const skills: { category: string; items: string[] }[] = [
     items: [
       "Git",
       "GitHub",
+      "Docker",
       "AWS S3",
       "Cloudflare R2",
       "Jest",
@@ -183,6 +184,13 @@ export const projects: Project[] = [
       { label: "Ver site", url: "https://confeitaria-da-re.vercel.app/" },
       { label: "Código", url: "https://github.com/EduardoLovo/Confeitaria-da-Re" },
     ],
+  },
+  {
+    title: "Fullstack Starter",
+    description:
+      "Base reutilizável para projetos full-stack, 100% em containers: frontend Next.js, API Fastify, worker com fila de e-mails (BullMQ) e Nginx como proxy reverso. Autenticação com refresh token rotativo, cache no Redis, 27 testes de integração contra Postgres e Redis reais, CI/CD com scan de vulnerabilidades (Trivy) e monitoramento com Prometheus + Grafana e 10 regras de alerta.",
+    tags: ["Next.js", "Fastify", "Prisma", "PostgreSQL", "Redis", "BullMQ", "Docker", "Nginx"],
+    links: [{ label: "Código", url: "https://github.com/EduardoLovo/fullstack-starter" }],
   },
   {
     title: "Mais projetos no GitHub",
