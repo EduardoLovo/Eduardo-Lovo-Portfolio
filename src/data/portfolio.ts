@@ -190,6 +190,7 @@ export const projects: Project[] = [
     description:
       "Base reutilizável para projetos full-stack, 100% em containers: frontend Next.js, API Fastify, worker com fila de e-mails (BullMQ) e Nginx como proxy reverso. Autenticação com refresh token rotativo, cache no Redis, 27 testes de integração contra Postgres e Redis reais, CI/CD com scan de vulnerabilidades (Trivy) e monitoramento com Prometheus + Grafana e 10 regras de alerta.",
     tags: ["Next.js", "Fastify", "Prisma", "PostgreSQL", "Redis", "BullMQ", "Docker", "Nginx"],
+    image: "/projeto-fullstack-starter.png",
     links: [{ label: "Código", url: "https://github.com/EduardoLovo/fullstack-starter" }],
   },
   {

@@ -78,6 +78,14 @@ export const cv = {
       image: "/confeitaria-da-re.png",
     },
     {
+      name: "Fullstack Starter",
+      stack: "Next.js · Fastify · PostgreSQL · Redis · BullMQ · Docker · Nginx",
+      description:
+        "Base full-stack 100% em containers, com fila de e-mails, cache no Redis, 27 testes de integração, CI/CD com scan de vulnerabilidades (Trivy) e monitoramento com Prometheus + Grafana.",
+      links: ["https://github.com/EduardoLovo/fullstack-starter"],
+      image: "/projeto-fullstack-starter.png",
+    },
+    {
       name: "Ana Cordeiro — Arquitetura",
       stack: "Next.js · Sanity CMS · Vercel",
       description:
