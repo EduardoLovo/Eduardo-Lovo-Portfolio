@@ -12,12 +12,12 @@ export default function Contact() {
             Vamos conversar
           </p>
           <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-            Procurando um dev <span className="text-gradient">júnior</span> para o
+            Procurando um <span className="text-gradient">DEV</span> para o
             time?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted">
             Estou aberto a novas oportunidades. Me chame no WhatsApp, baixe meu
-            currículo ou mande um e-mail — respondo rápido!
+            currículo ou mande um e-mail
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
