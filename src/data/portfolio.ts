@@ -194,6 +194,17 @@ export const projects: Project[] = [
     links: [{ label: "Código", url: "https://github.com/EduardoLovo/fullstack-starter" }],
   },
   {
+    title: "Analisador de Vagas",
+    description:
+      "Ferramenta com IA que compara o currículo (em PDF ou texto) com a descrição de uma vaga e devolve nota de compatibilidade, pontos fortes, lacunas, palavras-chave faltando, sugestões de ajuste e um rascunho de carta de apresentação. Usa o Google Gemini com resposta em JSON estruturado (JSON Schema) e troca automática de modelo quando a cota gratuita acaba ou a API fica sobrecarregada.",
+    tags: ["Next.js", "TypeScript", "Google Gemini", "IA", "Tailwind"],
+    image: "/projeto-analisador-de-vagas.png",
+    links: [
+      { label: "Ver site", url: "https://analisador-de-vagas-five.vercel.app/" },
+      { label: "Código", url: "https://github.com/EduardoLovo/Analisador-de-Vagas" },
+    ],
+  },
+  {
     title: "Mais projetos no GitHub",
     description:
       "Estudos, projetos das formações e experimentos com novas tecnologias ficam no meu GitHub.",
