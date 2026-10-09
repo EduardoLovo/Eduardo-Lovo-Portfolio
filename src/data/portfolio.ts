@@ -205,6 +205,17 @@ export const projects: Project[] = [
     ],
   },
   {
+    title: "Task API — Express × Flask",
+    description:
+      "A mesma API REST de tarefas (com JWT) escrita duas vezes, em Express 5 e em Flask 3, com contrato e tratamento de erros idênticos: todo erro volta no mesmo formato JSON, com code estável e requestId, e um teste de contrato no Docker Compose compara as respostas das duas. Um front em Angular 22 alterna entre as APIs, mostra cada requisição e a resposta crua (inclusive o rate limit) e dispara 14 requisições inválidas nas duas ao mesmo tempo para compará-las lado a lado. As APIs ficam no plano gratuito do Render: a primeira requisição pode levar até 1 minuto (o app avisa).",
+    tags: ["Angular", "TypeScript", "Node.js", "Express", "Python", "Flask", "Docker", "GitHub Actions"],
+    image: "/projeto-task-api.png",
+    links: [
+      { label: "Ver site", url: "https://task-app-angular-taupe.vercel.app" },
+      { label: "Código", url: "https://github.com/EduardoLovo/task-app--angular" },
+    ],
+  },
+  {
     title: "Mais projetos no GitHub",
     description:
       "Estudos, projetos das formações e experimentos com novas tecnologias ficam no meu GitHub.",

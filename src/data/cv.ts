@@ -86,6 +86,14 @@ export const cv = {
       image: "/projeto-fullstack-starter.png",
     },
     {
+      name: "Task API — Express × Flask",
+      stack: "Angular · Node.js · Express · Python · Flask · Docker",
+      description:
+        "A mesma API REST com JWT em Express e em Flask, com erros padronizados e teste de contrato que compara as duas; front em Angular alterna entre elas e mostra cada requisição e a resposta crua.",
+      links: ["https://task-app-angular-taupe.vercel.app"],
+      image: "/projeto-task-api.png",
+    },
+    {
       name: "Ana Cordeiro — Arquitetura",
       stack: "Next.js · Sanity CMS · Vercel",
       description:

@@ -201,7 +201,7 @@ export default function CVPage() {
           </p>
         </header>
 
-        <div className="space-y-5">
+        <div className="space-y-4">
           {cv.projects.map((p) => (
             <div key={p.name} className="flex items-center gap-6">
               <div className="min-w-0 flex-1">
@@ -230,7 +230,7 @@ export default function CVPage() {
                 width={640}
                 height={400}
                 sizes="260px"
-                className="aspect-[16/10] w-[58mm] shrink-0 rounded-lg border border-[#e5e7eb] object-cover object-top"
+                className="aspect-[16/10] w-[48mm] shrink-0 rounded-lg border border-[#e5e7eb] object-cover object-top"
               />
             </div>
           ))}
