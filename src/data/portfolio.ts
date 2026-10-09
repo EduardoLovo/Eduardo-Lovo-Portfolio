@@ -17,7 +17,7 @@ export const personal = {
     "https://wa.me/5543999567684?text=Ol%C3%A1%20Eduardo%2C%20vi%20o%20seu%20portf%C3%B3lio!",
   email: "eduardo.llovo@gmail.com",
   // Caminho do seu currículo em PDF (coloque o arquivo em /public)
-  cvUrl: "/curriculo-eduardo.pdf",
+  cvUrl: "/cv-eduardo-lovo.pdf",
   // Sua foto (arquivo em /public)
   photo: "/eduardo.jpg",
   // Anos de experiência / status
