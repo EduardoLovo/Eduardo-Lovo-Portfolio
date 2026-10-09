@@ -6,7 +6,7 @@
 
 export const personal = {
   name: "Eduardo Lovo",
-  role: "Desenvolvedor Full-Stack Júnior",
+  role: "Desenvolvedor Full-Stack",
   // Frase curta que aparece no topo (hero)
   tagline:
     "Transformo ideias em aplicações web rápidas, acessíveis e bonitas. Do banco de dados à interface.",
@@ -34,9 +34,10 @@ export const socials = [
 // Texto da seção "Sobre mim"
 export const about = {
   paragraphs: [
-    "Sou desenvolvedor full-stack júnior de Jandaia do Sul (PR). Comecei na área em 2022 e desde então venho construindo aplicações web com foco em código limpo e boa experiência de uso.",
-    "Na Inphantil, construí e mantenho uma plataforma de e-commerce completa (React + NestJS + PostgreSQL) que serve duas lojas no ar, com integrações reais de pagamento, cálculo de frete dos Correios e painel administrativo.",
-    "Estou em busca da minha primeira oportunidade dedicada como desenvolvedor para crescer em um time e entregar valor de verdade.",
+    "Sou desenvolvedor full-stack",
+    "Já construí dois e-commerces que estão em produção (React + NestJS + PostgreSQL) e um sistema interno em Next.js que a equipe de vendas usa no dia a dia. Também entreguei sites e sistemas para outros clientes com Next.js, Supabase e Sanity CMS.",
+    "Na prática, já trabalhei com pagamentos (Pix e cartão parcelado), frete dos Correios, autenticação (JWT, OAuth e 2FA) e painéis administrativos.",
+    "Também venho me aprofundando em Docker e CI/CD. No Task API — Express × Flask, montei o pipeline completo no GitHub Actions: lint, testes em várias versões de Node e Python, build e teste da imagem Docker e um teste de contrato que sobe as duas APIs e compara as respostas. Com a branch main protegida, o deploy no Render só acontece depois que o CI passa. Esse e outros estudos, como o Fullstack Starter, estão em Projetos em destaque.",
   ],
   // Números de destaque (edite ou remova)
   stats: [

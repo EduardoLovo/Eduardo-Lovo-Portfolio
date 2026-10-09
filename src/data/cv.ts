@@ -6,7 +6,7 @@
 export const cv = {
   // Resumo profissional (topo do currículo)
   summary:
-    "Sou desenvolvedor full-stack júnior. Construí e mantenho em produção a plataforma de e-commerce (React + NestJS + PostgreSQL) que atende duas lojas do Grupo Inphantil, e também o sistema interno em Next.js que a equipe de vendas usa no dia a dia. Além disso, entreguei sites e sistemas para outros clientes com Next.js, Supabase e Sanity CMS. Já trabalhei na prática com pagamentos (Pix e cartão parcelado), frete dos Correios, autenticação (JWT, OAuth e 2FA) e painéis administrativos. Agora busco minha primeira oportunidade dedicada como desenvolvedor.",
+    "Sou desenvolvedor full-stack. Já construí dois e-commerces que estão em produção (React + NestJS + PostgreSQL) e um sistema interno em Next.js que a equipe de vendas usa no dia a dia. Também entreguei sites e sistemas para outros clientes com Next.js, Supabase e Sanity CMS. Na prática, já trabalhei com pagamentos (Pix e cartão parcelado), frete dos Correios, autenticação (JWT, OAuth e 2FA) e painéis administrativos. Também venho me aprofundando em Docker e CI/CD: no projeto Task API, montei o pipeline completo no GitHub Actions (lint, testes em várias versões de Node e Python, build e teste da imagem Docker e teste de contrato), com deploy no Render só depois que o CI passa.",
 
   // Experiência profissional (mais recente primeiro)
   experience: [
@@ -87,9 +87,9 @@ export const cv = {
     },
     {
       name: "Task API — Express × Flask",
-      stack: "Angular · Node.js · Express · Python · Flask · Docker",
+      stack: "Angular · Node.js · Express · Python · Flask · Docker · GitHub Actions",
       description:
-        "A mesma API REST com JWT em Express e em Flask, com erros padronizados e teste de contrato que compara as duas; front em Angular alterna entre elas e mostra cada requisição e a resposta crua.",
+        "A mesma API REST com JWT em Express e em Flask, com erros padronizados e teste de contrato que compara as duas; front em Angular alterna entre elas. CI/CD no GitHub Actions com deploy no Render só após o CI verde.",
       links: ["https://task-app-angular-taupe.vercel.app"],
       image: "/projeto-task-api.png",
     },
