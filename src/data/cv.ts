@@ -86,7 +86,7 @@ export const cv = {
       image: "/projeto-fullstack-starter.png",
     },
     {
-      name: "Task API — Express × Flask",
+      name: "Task API - Express × Flask",
       stack: "Angular · Node.js · Express · Python · Flask · Docker · GitHub Actions",
       description:
         "A mesma API REST com JWT em Express e em Flask, com erros padronizados e teste de contrato que compara as duas; front em Angular alterna entre elas. CI/CD no GitHub Actions com deploy no Render só após o CI verde.",

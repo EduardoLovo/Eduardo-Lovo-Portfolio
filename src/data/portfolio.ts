@@ -37,7 +37,7 @@ export const about = {
     "Sou desenvolvedor full-stack",
     "Já construí dois e-commerces que estão em produção (React + NestJS + PostgreSQL) e um sistema interno em Next.js que a equipe de vendas usa no dia a dia. Também entreguei sites e sistemas para outros clientes com Next.js, Supabase e Sanity CMS.",
     "Na prática, já trabalhei com pagamentos (Pix e cartão parcelado), frete dos Correios, autenticação (JWT, OAuth e 2FA) e painéis administrativos.",
-    "Também venho me aprofundando em Docker e CI/CD. No Task API — Express × Flask, montei o pipeline completo no GitHub Actions: lint, testes em várias versões de Node e Python, build e teste da imagem Docker e um teste de contrato que sobe as duas APIs e compara as respostas. Com a branch main protegida, o deploy no Render só acontece depois que o CI passa. Esse e outros estudos, como o Fullstack Starter, estão em Projetos em destaque.",
+    "Também venho me aprofundando em Docker e CI/CD. No Task API - Express × Flask, montei o pipeline completo no GitHub Actions: lint, testes em várias versões de Node e Python, build e teste da imagem Docker e um teste de contrato que sobe as duas APIs e compara as respostas. Com a branch main protegida, o deploy no Render só acontece depois que o CI passa. Esse e outros estudos, como o Fullstack Starter, estão em Projetos em destaque.",
   ],
   // Números de destaque (edite ou remova)
   stats: [
@@ -206,7 +206,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    title: "Task API — Express × Flask",
+    title: "Task API - Express × Flask",
     description:
       "A mesma API REST de tarefas (com JWT) escrita duas vezes, em Express 5 e em Flask 3, com contrato e tratamento de erros idênticos: todo erro volta no mesmo formato JSON, com code estável e requestId, e um teste de contrato no Docker Compose compara as respostas das duas. Um front em Angular 22 alterna entre as APIs, mostra cada requisição e a resposta crua (inclusive o rate limit) e dispara 14 requisições inválidas nas duas ao mesmo tempo para compará-las lado a lado. As APIs ficam no plano gratuito do Render: a primeira requisição pode levar até 1 minuto (o app avisa).",
     tags: ["Angular", "TypeScript", "Node.js", "Express", "Python", "Flask", "Docker", "GitHub Actions"],
